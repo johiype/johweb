@@ -32,7 +32,7 @@ jobs:
                 johweb-ec2-pub1:
                   ansible_host: "{{ lookup('env', 'HOST_IP') }}"
                   ansible_user: "{{ lookup('env', 'WEBSRV_USR') }}"
-
+  Docker:
     name: "Perform Docker Compose Up"
     runs-on: ubuntu-latest
     steps:
