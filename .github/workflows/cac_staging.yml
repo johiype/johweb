@@ -8,15 +8,18 @@ on:
 env:
   TF_VAR_the_key: ${{ secrets.TF_VAR_THE_KEY }}
   WEBSRV_USR: ${{ vars.WEBSRV_USR }}
+  ECR_ENDPOINT: ${{ vars.ECR_ENDPOINT }}
   HOST_IP: ${{ vars.HOST_IP }}
 
 jobs:
   Ansible:
-    name: "Dry run Anisble Playbook"
+    name: "Run Anisble Playbook"
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Source Code
         uses: actions/checkout@v2
+        with:
+          ref: infra-staging # change to 'main' when push branch changes to 'pull_request'
 
       - name: Run Ansible Playbook
         uses: dawidd6/action-ansible-playbook@v2
@@ -29,3 +32,32 @@ jobs:
                 johweb-ec2-pub1:
                   ansible_host: "{{ lookup('env', 'HOST_IP') }}"
                   ansible_user: "{{ lookup('env', 'WEBSRV_USR') }}"
+
+    name: "Perform Docker Compose Up"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Source Code
+        uses: actions/checkout@v2
+        with:
+          ref: infra-staging # change to 'main' when push branch changes to 'pull_request'
+
+      - name: Install SSH Client
+        run: sudo apt-get update && sudo apt-get install -y openssh-client
+
+      - name: Copy Docker Compose File to EC2 instance
+        run: |
+          scp -o StrictHostKeyChecking=no -i ${{ secrets.TF_VAR_THE_KEY }} \
+          webapp/compose.yml ${{ secrets.WEBSRV_USR }}@${{ secrets.HOST_IP }}:/home/${{ secrets.WEBSRV_USR }}/compose.yml
+
+      - name: Set permissions on Docker Compose file
+        run: |
+          ssh -o StrictHostKeyChecking=no -i ${{ secrets.TF_VAR_THE_KEY }} \
+          ${{ secrets.WEBSRV_USR }}@${{ secrets.HOST_IP }} \
+          "sudo chown ${{ secrets.WEBSRV_USR }}:${{ secrets.WEBSRV_USR }} \
+          /home/${{ secrets.WEBSRV_USR }}/compose.yml && sudo chmod 0644 /home/${{ secrets.WEBSRV_USR }}/compose.yml"
+
+      - name: Run Docker Compose
+        run: |
+          ssh -o StrictHostKeyChecking=no -i ${{ secrets.TF_VAR_THE_KEY }} \
+          ${{ secrets.WEBSRV_USR }}@${{ secrets.HOST_IP }} \
+          "docker-compose -f /home/${{ secrets.WEBSRV_USR }}/compose.yml up -d"
