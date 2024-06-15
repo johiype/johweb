@@ -27,7 +27,7 @@ jobs:
             all:
               hosts:
                 johweb-ec2-pub1:
-                  ansible_host: $HOST_IP
-                  ansible_user: $WEBSRV_USR
+                  ansible_host: "{{ lookup('env', 'HOST_IP') }}"
+                  ansible_user: "{{ lookup('env', 'WEBSRV_USR') }}"
           options:  |
             --check
