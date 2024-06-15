@@ -1,6 +1,6 @@
 name: "Johweb Ansible CaC Workflow"
 on:
-  push:
+  push:  # in future change this to 'pull_request'
     branches:
       - infra-staging
     paths:
@@ -29,5 +29,3 @@ jobs:
                 johweb-ec2-pub1:
                   ansible_host: "{{ lookup('env', 'HOST_IP') }}"
                   ansible_user: "{{ lookup('env', 'WEBSRV_USR') }}"
-          options:  |
-            --check
