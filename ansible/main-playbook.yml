@@ -137,3 +137,7 @@
       args:
         executable: /bin/bash
         chdir: "/home/{{ lookup('env', 'websrv_usr') }}"
+
+
+
+## Triggering Ansible Playbook
