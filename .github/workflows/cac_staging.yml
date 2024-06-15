@@ -7,8 +7,8 @@ on:
       - ansible/main-playbook.yml
 env:
   TF_VAR_the_key: ${{ secrets.TF_VAR_THE_KEY }}
-  websrv_usr: WEBSRV_USR
-  ecr_endpoint: ECR_ENDPOINT
+  WEBSRV_USR: WEBSRV_USR
+  ECR_ENDPOINT: ECR_ENDPOINT
   host_ip: HOST_IP
 
 jobs:
@@ -28,7 +28,7 @@ jobs:
             all:
               hosts:
                 johweb-ec2-pub1:
-                  ansible_host: "{{ lookup('env', 'host_ip') }}"
-                  ansible_user: "{{ lookup('env', 'websrv_usr') }}"
+                  ansible_host: $HOST_IP
+                  ansible_user: $WEBSRV_USR
           options:  |
             --check
