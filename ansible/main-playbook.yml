@@ -30,7 +30,7 @@
 
     - name: Add user to the docker group
       user:
-        name: "{{ lookup('env', 'websrv_usr') }}"
+        name: "{{ lookup('env', 'WEBSRV_USR') }}"
         groups: docker
         append: yes
 
@@ -62,53 +62,53 @@
       debug:
         msg: "Docker Compose version: {{ docker_compose_version.stdout }}"
 
-    - name: Copy Docker Compose file from local machine to remote instance
-      copy:
-        src: /home/johith/johith-portfolio/webapp/compose.yml
-        dest: "/home/{{ lookup('env', 'websrv_usr') }}/compose.yml"
-        owner: "{{ lookup('env', 'websrv_usr') }}"
-        group: "{{ lookup('env', 'websrv_usr') }}"
-        mode: '0644'
+    #- name: Copy Docker Compose file from local machine to remote instance
+     # copy:
+     #   src: /home/johith/johith-portfolio/webapp/compose.yml
+     #   dest: "/home/{{ lookup('env', 'websrv_usr') }}/compose.yml"
+     #   owner: "{{ lookup('env', 'WEBSRV_USR') }}"
+     #   group: "{{ lookup('env', 'WEBSRV_USR') }}"
+     #   mode: '0644'
 
-    - name: Copy Caddyfile from local machine to remote instance
-      copy:
-        src: /home/johith/johith-portfolio/webapp/Caddyfile
-        dest: "/home/{{ lookup('env', 'websrv_usr') }}/"
-        owner: "{{ lookup('env', 'websrv_usr') }}"
-        group: "{{ lookup('env', 'websrv_usr') }}"
-        mode: '0644'
+   # - name: Copy Caddyfile from local machine to remote instance
+   #   copy:
+   #     src: /home/johith/johith-portfolio/webapp/Caddyfile
+    #    dest: "/home/{{ lookup('env', 'WEBSRV_USR') }}/"
+    #    owner: "{{ lookup('env', 'WEBSRV_USR') }}"
+    #    group: "{{ lookup('env', 'WEBSRV_USR') }}"
+    #    mode: '0644'
 
     - name: Ensure Docker config directory exists
       file:
-        path: "/home/{{ lookup('env', 'websrv_usr') }}/.docker"
+        path: "/home/{{ lookup('env', 'WEBSRV_USR') }}/.docker"
         state: directory
         mode: '0755'
-        owner: "{{ lookup('env', 'websrv_usr') }}"
-        group: "{{ lookup('env', 'websrv_usr') }}"
+        owner: "{{ lookup('env', 'WEBSRV_USR') }}"
+        group: "{{ lookup('env', 'WEBSRV_USR') }}"
 
     - name: Set environment variables and install ECR credential helper
       shell: |
-        export GOPATH=/home/{{ lookup('env', 'websrv_usr') }}/go
+        export GOPATH=/home/{{ lookup('env', 'WEBSRV_USR') }}/go
         export PATH=$PATH:$GOPATH/bin
-        export DEAFULT_ECR_HELPER_CFG="/home/{{ lookup('env', 'websrv_usr') }}/.docker/config.json"
+        export DEAFULT_ECR_HELPER_CFG="/home/{{ lookup('env', 'WEBSRV_USR') }}/.docker/config.json"
         go install github.com/awslabs/amazon-ecr-credential-helper/ecr-login/cli/docker-credential-ecr-login@latest
         mv go/bin/docker-credential-ecr-login /usr/bin/
 
     - name: Change ownership of Go directory to the user
       file:
-        path: "/home/{{ lookup('env', 'websrv_usr') }}/go"
+        path: "/home/{{ lookup('env', 'WEBSRV_USR') }}/go"
         state: directory
-        owner: "{{ lookup('env', 'websrv_usr') }}"
-        group: "{{ lookup('env', 'websrv_usr') }}"
+        owner: "{{ lookup('env', 'WEBSRV_USR') }}"
+        group: "{{ lookup('env', 'WEBSRV_USR') }}"
         recurse: yes
 
     - name: Add ECR credential helper configuration to Docker config.json
       blockinfile:
-        path: "/home/{{ lookup('env', 'websrv_usr') }}/.docker/config.json"
+        path: "/home/{{ lookup('env', 'WEBSRV_USR') }}/.docker/config.json"
         block: |
           {
             "credHelpers": {
-              "{{ lookup('env', 'ecr_endpoint') }}": "ecr-login"    # put in variable
+              "{{ lookup('env', 'ECR_ENDPOINT') }}": "ecr-login"
             }
           }
         create: yes
@@ -120,23 +120,23 @@
         name: docker
         state: restarted
 
-- name: johweserver Apache2 Container Setup
-  hosts: johweb-ec2-pub1
-  become_user: "{{ lookup('env', 'websrv_usr') }}"
-  gather_facts: no
-  tasks:
+#- name: johweserver Apache2 Container Setup
+#  hosts: johweb-ec2-pub1
+#  become_user: "{{ lookup('env', 'websrv_usr') }}"
+#  gather_facts: no
+#  tasks:
 
-    - name: Checking if Docker is running
-      service:
-        name: docker
-        state: started
-        enabled: yes
+ #   - name: Checking if Docker is running
+ #     service:
+ #       name: docker
+ #       state: started
+ #       enabled: yes
 
-    - name: Run Docker Compose up
-      shell: docker-compose up -d
-      args:
-        executable: /bin/bash
-        chdir: "/home/{{ lookup('env', 'websrv_usr') }}"
+#    - name: Run Docker Compose up
+#      shell: docker-compose up -d
+#      args:
+#        executable: /bin/bash
+#        chdir: "/home/{{ lookup('env', 'websrv_usr') }}"
 
 
 
