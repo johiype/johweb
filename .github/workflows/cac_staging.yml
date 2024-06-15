@@ -7,9 +7,8 @@ on:
       - ansible/main-playbook.yml
 env:
   TF_VAR_the_key: ${{ secrets.TF_VAR_THE_KEY }}
-  WEBSRV_USR: WEBSRV_USR
-  ECR_ENDPOINT: ECR_ENDPOINT
-  host_ip: HOST_IP
+  WEBSRV_USR: ${{ vars.WEBSRV_USR }}
+  HOST_IP: ${{ vars.HOST_IP }}
 
 jobs:
   Ansible:
