@@ -1,0 +1,5 @@
+:80 {
+
+	reverse_proxy {$johweb_ec2_pub1_privateip}:8080
+
+}
