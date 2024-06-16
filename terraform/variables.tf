@@ -14,10 +14,10 @@ variable ZONE3 {
 	default = "us-east-2c"
 }
 
-variable "bucket_name" {}
-variable "bucket_key" {}
-variable "bucket_region" {}
-variable "ecr_name" {}
-variable "the_pub_key" {}
-variable "websrv_ami_id" {}
+variable "BUCKET_NAME" {}
+variable "BUCKEY_KEY" {}
+variable "BUCKET_REGION" {}
+variable "ECR_NAME" {}
+# variable "THE_PUB_KEY" {}
+variable "WEBSRV_AMI_ID" {}
 
