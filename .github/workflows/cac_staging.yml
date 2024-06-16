@@ -47,8 +47,8 @@ jobs:
           ls -la webapp
           cat webapp/compose.yml
 
-      - name: Install SSH Client
-        run: sudo apt-get update && sudo apt-get install -y openssh-client
+#      - name: Install SSH Client
+#        run: sudo apt-get update && sudo apt-get install -y openssh-client
 
       - name:  Copy Docker Compose File to EC2 instance
         uses: appleboy/scp-action@v0.1.7
