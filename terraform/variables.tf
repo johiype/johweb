@@ -15,7 +15,7 @@ variable ZONE3 {
 }
 
 variable "BUCKET_NAME" {}
-variable "BUCKEY_KEY" {}
+variable "BUCKET_KEY" {}
 variable "BUCKET_REGION" {}
 variable "ECR_NAME" {}
 variable "THE_PUB_KEY" {}
