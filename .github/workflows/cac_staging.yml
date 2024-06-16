@@ -45,7 +45,7 @@ jobs:
         run: sudo apt-get update && sudo apt-get install -y openssh-client
 
       - name: Copy Docker Compose File to EC2 instance
-        run: >
+        run: >-
           scp -o StrictHostKeyChecking=no -i ${{ secrets.TF_VAR_THE_KEY }}
           webapp/compose.yml ${{ vars.WEBSRV_USR }}@${{ vars.HOST_IP }}:/home/${{ vars.WEBSRV_USR }}/compose.yml
 
