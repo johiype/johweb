@@ -46,13 +46,14 @@ jobs:
       - name: Terraform Plan
         id: plan
         run: terraform plan -detailed-exitcode -no-color -input=false -out planfile
+        continue-on-error: true
+
+      - name: Print Terraform Plan Exit Code
+        run: echo $?
 
       - name: Check for Plan Failure
         if: steps.plan.outputs.exitcode == 1
         run: exit 1
-
-      - name: Print Terraform Plan Exit Code
-        run: echo $?
 
             #0 = Succeeded with empty diff (no changes)
             #1 = Error
