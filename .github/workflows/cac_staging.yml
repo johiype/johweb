@@ -41,6 +41,9 @@ jobs:
         with:
           ref: infra-staging # change to 'main' when push branch changes to 'pull_request'
 
+      - name: Directory checking
+        run: ls -la
+
       - name: Install SSH Client
         run: sudo apt-get update && sudo apt-get install -y openssh-client
 
