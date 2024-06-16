@@ -1,6 +1,6 @@
 name: "Johweb Ansible CaC Workflow"
 on:
-  push:  # in future change this to 'pull_request'
+  workflow_dispatch:  # in future change this to 'pull_request'
     branches:
       - infra-staging
     paths:
