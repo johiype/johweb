@@ -1,0 +1,47 @@
+name: "Johweb Terraform IaC Workflow"
+on:
+  workflow_dispatch:  # in future change this to 'pull_request'
+    branches:
+      - infra-staging
+    paths:
+      - terraform/**
+env:
+  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  TF_VAR_THE_KEY: ${{ secrets.TF_VAR_THE_KEY }}
+  TF_VAR_BUCKET_NAME:  ${{ vars.TF_VAR_BUCKET_NAME }}
+  TF_VAR_BUCKET_KEY:  ${{ vars.TF_VAR_BUCKET_KEY }}
+  TF_VAR_BUCKET_REGION:  ${{ vars.TF_VAR_BUCKET_REGION }}
+  TF_VAR_WEBSRV_AMI_ID:  ${{ vars.TF_VAR_WEBSRV_AMI_ID }}
+  TF_VAR_ECR_NAME:  ${{ vars.TF_VAR_ECR_NAME }}
+  WEBSRV_USR: ${{ vars.WEBSRV_USR }}
+  HOST_IP: ${{ vars.HOST_IP }}
+
+jobs:
+  Terraform:
+    name: "Apply Terraform Code Changes"
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./terraform
+    steps:
+      - name: Checkout Source Code
+        uses: actions/checkout@v2
+        with:
+          ref: infra-staging # change to 'main' when push branch changes to 'pull_request'
+      - name: Setup Terraform with specified version on the runner
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.6.3
+
+      - name: Terraform init
+        id: init
+        run: terraform init -backend-config="bucket=$TF_VAR_BUCKET_NAME"
+
+      - name: Terraform Validate
+        id: validate
+        run: terraform validate
+
+      - name: Terraform Plan
+        id: plan
+        run: terraform plan -no-color -input=false -out planfile
