@@ -50,7 +50,7 @@ jobs:
 
       - name: Set permissions on Docker Compose file
         run: >
-          ssh -o StrictHostKeyChecking=no -i ${{ varss.TF_VAR_THE_KEY }}
+          ssh -o StrictHostKeyChecking=no -i ${{ vars.TF_VAR_THE_KEY }}
           ${{ vars.WEBSRV_USR }}@${{ vars.HOST_IP }}
           "sudo chown ${{ vars.WEBSRV_USR }}:${{ vars.WEBSRV_USR }}
           /home/${{ vars.WEBSRV_USR }}/compose.yml && sudo chmod 0644 /home/${{ vars.WEBSRV_USR }}/compose.yml"
