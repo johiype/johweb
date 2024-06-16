@@ -53,9 +53,9 @@ jobs:
 
       - name: Set up SSH key
         run: |
-          TEMP_KEY_FILE=$(mktemp)
-          echo "$PRIVATE_KEY" > "$TEMP_KEY_FILE"
-          chmod 600 "$TEMP_KEY_FILE"
+          mkdir -p ~/.ssh
+          echo "${{ secrets.TF_VAR_THE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
         env:
           PRIVATE_KEY: ${{ secrets.TF_VAR_THE_KEY }}
 
@@ -82,8 +82,8 @@ jobs:
      #     target: /home/${{ vars.WEBSRV_USR }}/
 
       - name: Copy Docker Compose File to EC2 instance
-        run: >-
-          sudo scp -i "$TEMP_KEY_FILE" webapp/compose.yml ${{vars.WEBSRV_USR}}@${{vars.HOST_IP}}:/home/${{vars.WEBSRV_USR}}/
+        run: |
+          scp -o StrictHostKeyChecking=no webapp/compose.yml ${{vars.WEBSRV_USR}}@${{vars.HOST_IP}}:/home/${{vars.WEBSRV_USR}}/
 
       - name: Set permissions on Docker Compose file
         run: >
