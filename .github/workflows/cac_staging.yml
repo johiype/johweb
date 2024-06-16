@@ -25,7 +25,12 @@ jobs:
       - name: Run Ansible Playbook
         uses: dawidd6/action-ansible-playbook@v2
         with:
+<<<<<<< Updated upstream
           playbook: ansible/main-playbook.yml
+=======
+          directory: ./ansible
+          playbook: main-playbook.yml
+>>>>>>> Stashed changes
           key: ${{secrets.TF_VAR_THE_KEY}}
           inventory: |
             all:
