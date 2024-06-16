@@ -16,6 +16,9 @@ jobs:
   Ansible:
     name: "Run Anisble Playbook"
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./ansible
     steps:
       - name: Checkout Source Code
         uses: actions/checkout@v2
@@ -25,7 +28,7 @@ jobs:
       - name: Run Ansible Playbook
         uses: dawidd6/action-ansible-playbook@v2
         with:
-          playbook: ansible/main-playbook.yml
+          playbook: main-playbook.yml
           key: ${{secrets.TF_VAR_THE_KEY}}
           inventory: |
             all:
