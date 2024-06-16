@@ -18,6 +18,6 @@ variable "BUCKET_NAME" {}
 variable "BUCKEY_KEY" {}
 variable "BUCKET_REGION" {}
 variable "ECR_NAME" {}
-# variable "THE_PUB_KEY" {}
+variable "THE_PUB_KEY" {}
 variable "WEBSRV_AMI_ID" {}
 
