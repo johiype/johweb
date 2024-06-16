@@ -102,18 +102,24 @@
         group: "{{ lookup('env', 'WEBSRV_USR') }}"
         recurse: yes
 
+    #- name: Add ECR credential helper configuration to Docker config.json
+    #  blockinfile:
+    #    path: "/home/{{ lookup('env', 'WEBSRV_USR') }}/.docker/config.json"
+    #    block: |
+    #      {
+    #        \"credHelpers\": {
+    #          \"{{ lookup('env', 'ECR_ENDPOINT') }}\": \"ecr-login\"
+    #        }
+    #      }
+     #   create: yes
+     #   mode: '0644'
+     #   marker: ""
+
     - name: Add ECR credential helper configuration to Docker config.json
-      blockinfile:
-        path: "/home/{{ lookup('env', 'WEBSRV_USR') }}/.docker/config.json"
-        block: |
-          {
-            "credHelpers": {
-              "{{ lookup('env', 'ECR_ENDPOINT') }}": "ecr-login"
-            }
-          }
-        create: yes
+      template:
+        src: docker_config.json.j2
+        dest: "/home/{{ lookup('env', 'WEBSRV_USR') }}/.docker/config.json"
         mode: '0644'
-        marker: ""
 
     - name: Restarting Docker Service
       service:
@@ -140,4 +146,4 @@
 
 
 
-### Triggering Ansible Playbook
+## Triggering Ansible Playbook
