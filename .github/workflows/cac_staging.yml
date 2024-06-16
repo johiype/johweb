@@ -38,6 +38,7 @@ jobs:
                   ansible_host: "{{ lookup('env', 'HOST_IP') }}"
                   ansible_user: "{{ lookup('env', 'WEBSRV_USR') }}"
   Docker:
+    needs: Ansible
     name: "Perform Docker Compose Up"
     runs-on: ubuntu-latest
     steps:
