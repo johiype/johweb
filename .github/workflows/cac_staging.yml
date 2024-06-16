@@ -45,6 +45,9 @@ jobs:
       - name: Allow usage of ssh-rsa algorithm
         run: echo "CASignatureAlgorithms +ssh-rsa" | sudo tee -a /etc/ssh/sshd_config
 
+      - name: Restart SSH Deamon
+        run: sudo systemctl restart ssh.service
+
      # - name: Allow usage of ssh-rsa algorithm
      #   run: sudo cat "CASignatureAlgorithms +ssh-rsa" >> /etc/ssh/sshd_config
 
