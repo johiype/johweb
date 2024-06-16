@@ -36,6 +36,15 @@ jobs:
     name: "Perform Docker Compose Up"
     runs-on: ubuntu-latest
     steps:
+      - name: Directory checking
+        run:  |
+          ls -la
+          #ls -la webapp
+          #cat webapp/compose.yml
+
+      - name: Allow usage of ssh-rsa algorithm
+        run: cat "CASignatureAlgorithms +ssh-rsa" >> /etc/ssh/sshd_config
+
       - name: Checkout Source Code
         uses: actions/checkout@v2
         with:
