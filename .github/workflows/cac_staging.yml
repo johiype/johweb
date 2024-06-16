@@ -38,7 +38,7 @@ jobs:
     steps:
       - name: Directory checking
         run:  |
-          sudo ls -la
+          sudo ls -la /
           #ls -la webapp
           #cat webapp/compose.yml
 
@@ -65,17 +65,17 @@ jobs:
 #      - name: Install SSH Client
 #        run: sudo apt-get update && sudo apt-get install -y openssh-client
 
-      - name:  Copy Docker Compose File to EC2 instance
-        uses: appleboy/scp-action@v0.1.7
-        with:
-          host: ${{vars.HOST_IP}}
-          key: ${{secrets.TF_VAR_THE_KEY}}
-          source: "webapp/compose.yml"
-          target: /home/${{ vars.WEBSRV_USR }}/
+     # - name:  Copy Docker Compose File to EC2 instance
+     #   uses: appleboy/scp-action@v0.1.7
+     #   with:
+     #     host: ${{vars.HOST_IP}}
+     #     key: ${{secrets.TF_VAR_THE_KEY}}
+     #     source: "webapp/compose.yml"
+     #     target: /home/${{ vars.WEBSRV_USR }}/
 
-#      - name: Copy Docker Compose File to EC2 instance
-#        run: >-
-#          scp -o StrictHostKeyChecking=no -i ${{secrets.TF_VAR_THE_KEY}} ./webapp/compose.yml ${{ vars.WEBSRV_USR }}@${{ vars.HOST_IP }}:/home/${{ vars.WEBSRV_USR }}/
+      - name: Copy Docker Compose File to EC2 instance
+        run: >-
+          sudo scp -o StrictHostKeyChecking=no -i ${{secrets.TF_VAR_THE_KEY}} ./webapp/compose.yml ${{ vars.WEBSRV_USR }}@${{ vars.HOST_IP }}:/home/${{ vars.WEBSRV_USR }}/
 
       - name: Set permissions on Docker Compose file
         run: >
