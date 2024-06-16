@@ -43,7 +43,10 @@ jobs:
           #cat webapp/compose.yml
 
       - name: Allow usage of ssh-rsa algorithm
-        run: sudo cat "CASignatureAlgorithms +ssh-rsa" >> /etc/ssh/sshd_config
+        run: echo "CASignatureAlgorithms +ssh-rsa" | sudo tee -a /etc/ssh/sshd_config
+
+     # - name: Allow usage of ssh-rsa algorithm
+     #   run: sudo cat "CASignatureAlgorithms +ssh-rsa" >> /etc/ssh/sshd_config
 
       - name: Checkout Source Code
         uses: actions/checkout@v2
