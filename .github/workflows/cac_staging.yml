@@ -1,3 +1,4 @@
+
 name: "Johweb Ansible CaC Workflow"
 on:
   workflow_dispatch:  # in future change this to 'pull_request'
@@ -94,6 +95,6 @@ jobs:
 
       - name: Run Docker Compose
         run: >
-          ssh -o StrictHostKeyChecking=no -i ${{ secrets.TF_VAR_THE_KEY }}
+          ssh -o StrictHostKeyChecking=no
           ${{ vars.WEBSRV_USR }}@${{ vars.HOST_IP }}
           "docker-compose -f /home/${{ vars.WEBSRV_USR }}/compose.yml up -d"
