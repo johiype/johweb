@@ -31,7 +31,7 @@ jobs:
         with:
           ref: infra-staging # change to 'main' when push branch changes to 'pull_request'
       - name: Setup Terraform with specified version on the runner
-        uses: hashicorp/setup-terraform@v2
+        uses: hashicorp/setup-terraform@v3
         with:
           terraform_version: 1.6.3
 
