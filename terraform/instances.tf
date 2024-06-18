@@ -1,10 +1,10 @@
 resource "aws_key_pair" "johweb_keypair" {
 	key_name = "johweb_keypair"
-	public_key = "${var.the_pub_key}"
+	public_key = "${var.THE_PUB_KEY}"
 }
 
 resource "aws_instance" "johweb-ec2-pub1" {
-	ami = "${var.websrv_ami_id}"
+	ami = "${var.WEBSRV_AMI_ID}"
 	instance_type = "t2.micro"      
 	subnet_id = aws_subnet.johweb-pub-1.id
 	key_name = "johweb_keypair"
@@ -21,7 +21,7 @@ output "johweb-PublicIP" {
 }
 
 resource "aws_instance" "johweb-bastion-pub1" {
-	ami = "${var.websrv_ami_id}"
+	ami = "${var.WEBSRV_AMI_ID}"
 	instance_type = "t2.nano"
 	subnet_id = aws_subnet.johweb-pub-1.id
 	key_name = "johweb_keypair"
@@ -35,3 +35,6 @@ resource "aws_instance" "johweb-bastion-pub1" {
 output "bastion-PublicIP" {
         value = aws_instance.johweb-bastion-pub1.public_ip
 }
+
+######
+
