@@ -61,9 +61,9 @@ jobs:
         if: github.event_name == 'pull_request'
         continue-on-error: true
 
-      - run: echo ${{ steps.plan.outputs.stdout }}
-      - run: echo ${{ steps.plan.outputs.stderr }}
-      - run: echo ${{ steps.plan.outputs.exitcode }}
+     # - run: echo ${{ steps.plan.outputs.stdout }}
+     # - run: echo ${{ steps.plan.outputs.stderr }}
+     # - run: echo ${{ steps.plan.outputs.exitcode }}
 
       - name: Comment on Pull Request
         uses: actions/github-script@v6
