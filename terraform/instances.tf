@@ -11,7 +11,8 @@ resource "aws_instance" "johweb-ec2-pub1" {
 	vpc_security_group_ids = [aws_security_group.johweb-pub1-proxyserver-SG.id]
 	iam_instance_profile = "johweb-ec2-pub1"
 	tags = {
-		Name = "johweb-ec2-pub1"
+		Name = "johweb-ec2-pub1",
+		server_type = "web_server"
 	}
 }
 
@@ -25,11 +26,23 @@ resource "aws_instance" "johweb-bastion-pub1" {
 	instance_type = "t2.nano"
 	subnet_id = aws_subnet.johweb-pub-1.id
 	key_name = "johweb_keypair"
-	vpc_security_group_ids = [aws_security_group.johweb-pub1-bastion-SG.id]
-	
+	vpc_security_group_ids = [aws_security_group.johweb-pub1-proxyserver-SG.id]
 	tags = {
-		Name = "johweb-bastion-pub1"
+		Name = "johweb-bastion-pub1",
+		server_type = "bastion_host"
 	}
+}
+
+resource "aws_instance" "johweb-proxy-pub1" {
+	ami = "${var.WEBSRV_AMI_ID}"
+	instance_type = "t2.nano"
+	subnet_id = aws_subnet.johweb-pub-1.id
+	key_name = "johweb_keypair"
+	vpc_security_group_ids = [aws_security_group.johweb-pub1-bastion-SG.id]
+	tags = {
+                Name = "johweb-proxy-pub1",
+		server_type = "web_server"
+        }
 }
 
 output "bastion-PublicIP" {
