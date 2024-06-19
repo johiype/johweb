@@ -26,7 +26,7 @@ resource "aws_instance" "johweb-bastion-pub1" {
 	instance_type = "t2.nano"
 	subnet_id = aws_subnet.johweb-pub-1.id
 	key_name = "johweb_keypair"
-	vpc_security_group_ids = [aws_security_group.johweb-pub1-proxyserver-SG.id]
+	vpc_security_group_ids = [aws_security_group.johweb-pub1-bastion-SG.id]
 	tags = {
 		Name = "johweb-bastion-pub1",
 		server_type = "bastion_host"
@@ -38,7 +38,7 @@ resource "aws_instance" "johweb-proxy-pub1" {
 	instance_type = "t2.nano"
 	subnet_id = aws_subnet.johweb-pub-1.id
 	key_name = "johweb_keypair"
-	vpc_security_group_ids = [aws_security_group.johweb-pub1-bastion-SG.id]
+	vpc_security_group_ids = [aws_security_group.johweb-pub1-proxyserver-SG.id]
 	tags = {
                 Name = "johweb-proxy-pub1",
 		server_type = "web_server"
