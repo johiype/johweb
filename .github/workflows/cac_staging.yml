@@ -42,20 +42,6 @@ jobs:
     name: "Perform Docker Compose Up"
     runs-on: ubuntu-latest
     steps:
-      - name: Directory checking
-        run:  |
-          sudo ls -la /
-          #ls -la webapp
-          #cat webapp/compose.yml
-
-      #- name: Allow usage of ssh-rsa algorithm
-      #  run: echo "CASignatureAlgorithms +ssh-rsa" | sudo tee -a /etc/ssh/sshd_config
-
-      #- name: Restart SSH Deamon
-      #  run: sudo systemctl restart ssh.service
-
-     # - name: Allow usage of ssh-rsa algorithm
-     #   run: sudo cat "CASignatureAlgorithms +ssh-rsa" >> /etc/ssh/sshd_config
 
       - name: Set up SSH key
         run: |
@@ -75,17 +61,6 @@ jobs:
           ls -la
           ls -la webapp
           cat webapp/compose.yml
-
-#      - name: Install SSH Client
-#        run: sudo apt-get update && sudo apt-get install -y openssh-client
-
-     # - name:  Copy Docker Compose File to EC2 instance
-     #   uses: appleboy/scp-action@v0.1.7
-     #   with:
-     #     host: ${{vars.HOST_IP}}
-     #     key: ${{secrets.TF_VAR_THE_KEY}}
-     #     source: "webapp/compose.yml"
-     #     target: /home/${{ vars.WEBSRV_USR }}/
 
       - name: Copy Docker Compose File to EC2 instance
         run: |
