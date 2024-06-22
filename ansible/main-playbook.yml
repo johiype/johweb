@@ -1,5 +1,5 @@
 - name: Install Docker and Docker Compose on Amazon Linux 2023
-  hosts: johweb-ec2-pub1
+  hosts: all
   become: yes
   gather_facts: no
   tasks:

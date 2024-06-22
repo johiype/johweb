@@ -41,3 +41,4 @@ terraform.rc
 
 # Ignore the set environment variables script
 set_env_vars.sh
+init-terraform.sh
