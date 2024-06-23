@@ -131,8 +131,14 @@ jobs:
           "sudo chown ${{ vars.WEBSRV_USR }}:${{ vars.WEBSRV_USR }}
           /home/${{ vars.WEBSRV_USR }}/compose.yml && sudo chmod 0644 /home/${{ vars.WEBSRV_USR }}/compose.yml" 
           
-      - name: Run Docker Compose
+      - name: Starting Web Server through Docker Compose
         run: >
-          ssh -o StrictHostKeyChecking=no
-          ${{ vars.WEBSRV_USR }}@${{ vars.HOST_IP }}
+          ssh ${{needs.Ansible.outputs.bastion_host_args}}
+          ${{ vars.WEBSRV_USR }}@${{needs.Ansible.outputs.web_server_ip}}
           "docker-compose -f /home/${{ vars.WEBSRV_USR }}/compose.yml up -d johweb"
+
+      - name: Starting Proxy Server through Docker Compose
+        run: >
+          ssh ${{needs.Ansible.outputs.bastion_host_args}}
+          ${{ vars.WEBSRV_USR }}@${{needs.Ansible.outputs.proxy_server_ip}}
+          "docker-compose -f /home/${{ vars.WEBSRV_USR }}/compose.yml up -d caddy_reverse_proxy"
