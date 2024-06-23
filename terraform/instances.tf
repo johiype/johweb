@@ -68,7 +68,7 @@ resource "aws_instance" "johweb-proxy-pub1" {
 	vpc_security_group_ids = [aws_security_group.johweb-pub1-proxyserver-SG.id]
 	tags = {
                 Name = "johweb-proxy-pub1",
-		server_type = "web_server"
+		server_type = "proxy_server"
         }
 }
 
