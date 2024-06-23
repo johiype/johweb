@@ -11,8 +11,8 @@ env:
   WEBSRV_USR: ${{ vars.WEBSRV_USR }}
   ECR_ENDPOINT: ${{ vars.ECR_ENDPOINT }}
   HOST_IP: ${{ vars.HOST_IP }}
-  AWS_ACCESS_KEY_ID: ${{ vars.AWS_ACCESS_KEY_ID }}
-  AWS_SECRET_ACCESS_KEY: ${{ vars.AWS_SECRET_ACCESS_KEY }}
+  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
   AWS_REGION: ${{ vars.AWS_REGION }}
   
 jobs:
