@@ -38,7 +38,17 @@ jobs:
           mkdir -p ~/.ssh
           echo "${{ secrets.TF_VAR_THE_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
-
+          
+      - name: Edit SSH Config to prevent 
+        run: |
+          touch ~/.ssh/config
+          cat << EOF >> ~/.ssh/config
+          Host *
+            StrictHostKeyChecking no
+            UserKnownHostsFile=/dev/null
+          EOF
+          cat ~/.ssh/config
+    
       - name: Checkout Source Code
         uses: actions/checkout@v2
         with:
