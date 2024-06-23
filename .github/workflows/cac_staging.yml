@@ -21,7 +21,7 @@ jobs:
         working-directory: ./ansible
     steps:
       - name: Install Boto3
-        run: pip install boto3
+        run: pip3 install boto3
 
       #- name: Install Ansible
       #  run: 
