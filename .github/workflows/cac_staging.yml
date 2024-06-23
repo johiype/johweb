@@ -86,7 +86,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - env:
-          OUTPUT1: ${{jobs.Ansible.outputs.output1}}
+          OUTPUT1: ${{needs.Ansible.outputs.output1}}
         run: echo "$OUTPUT1"
         
       - name: Set up SSH key
