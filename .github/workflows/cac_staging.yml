@@ -19,6 +19,8 @@ jobs:
   Ansible:
     name: "Run Anisble Playbook"
     runs-on: ubuntu-latest
+    outputs:
+      output1: ${{ steps.pyscript.outputs.test }}
     #defaults:
       #run:
      #   working-directory: ./ansible
@@ -56,16 +58,21 @@ jobs:
 
 
       - name: Run Dynamic Inventory Script
+        id: pyscript
         run: |
-          ansible/dynamic-inventory.py
+          cat ansible/dynamic-inventory.py > inventory.json
+          # jq .web_servers.hosts[0] inventory.json
+          web_server_ip=$(jq .web_servers.hosts[0] inventory.json)
+          echo "test=${web_server_ip}" >> "$GITHUB_OUTPUT"
+          
 
-      - name: Run Ansible Playbook
-        uses: dawidd6/action-ansible-playbook@v2
-        with:
-          directory: ./ansible
-          playbook: main-playbook.yml
-          options: |
-            --inventory dynamic-inventory.py
+      #- name: Run Ansible Playbook
+      #  uses: dawidd6/action-ansible-playbook@v2
+      #  with:
+      #    directory: ./ansible
+      #    playbook: main-playbook.yml
+      #    options: |
+      #      --inventory dynamic-inventory.py
 
           #inventory: |
           #  all:
@@ -78,7 +85,10 @@ jobs:
     name: "Perform Docker Compose Up"
     runs-on: ubuntu-latest
     steps:
-
+      - env:
+          OUTPUT1: ${{jobs.Ansible.outputs.output1}}
+        run: echo "$OUTPUT1"
+        
       - name: Set up SSH key
         run: |
           mkdir -p ~/.ssh
