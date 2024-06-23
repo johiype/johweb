@@ -44,7 +44,7 @@ jobs:
 
       - name: Run Dynamic Inventory Script
         run: |
-          ./dynamic-inventory.py
+          ansible/dynamic-inventory.py
 
       - name: Run Ansible Playbook
         uses: dawidd6/action-ansible-playbook@v2
