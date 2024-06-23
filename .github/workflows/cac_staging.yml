@@ -42,9 +42,9 @@ jobs:
           ref: infra-staging # change to 'main' when push branch changes to 'pull_request'
 
 
-      #- name: Run Ansible Playbook
-      #  run: |
-      #    ansible-playbook -i dynamic-inventory.py main-playbook.yml
+      - name: Run Dynamic Inventory Script
+        run: |
+          ./dynamic-inventory.py
 
       - name: Run Ansible Playbook
         uses: dawidd6/action-ansible-playbook@v2
