@@ -1,0 +1,38 @@
+name: "Johweb Docker Image - ECR Upload Workflow. Only Triggered when app code changes"
+on:
+  workflow_dispatch:  # in future change this to 'pull_request'
+  push:     # in future change this to 'pull_request'
+    branches:
+      - infra-staging
+    paths:
+      - webapp/2106_soft_landing
+env:
+  WEBSRV_USR: ${{ vars.WEBSRV_USR }}
+  ECR_ENDPOINT: ${{ vars.ECR_ENDPOINT }}
+  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  AWS_DEFAULT_REGION: ${{ vars.AWS_DEFAULT_REGION }}
+  
+jobs:
+  AWS_ECR:
+    name: "Build, tag and push docker image to ECR"
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v3
+      with:
+        ref: infra-staging  # change to 'main' when push branch changes to 'pull_request'
+      
+    - name: Login to Amazon ECR
+      id: login-ecr
+      uses: aws-actions/amazon-ecr-login@v2
+
+    - name: Build, tag, and push docker image to Amazon ECR
+      working-directory: ./webapp
+      env:
+        REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        REPOSITORY: johweb_docker_image_repo
+        IMAGE_TAG: ${{ github.sha }}
+      run: |
+          docker build -t $REGISTRY/$REPOSITORY:latest .
+          docker push $REGISTRY/$REPOSITORY:latest
