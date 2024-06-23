@@ -20,23 +20,43 @@ jobs:
       run:
         working-directory: ./ansible
     steps:
+      - name: Install Boto3
+        run: pip install boto3
+
+      #- name: Install Ansible
+      #  run: 
+
+      - name: Set up SSH key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.TF_VAR_THE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+
       - name: Checkout Source Code
         uses: actions/checkout@v2
         with:
           ref: infra-staging # change to 'main' when push branch changes to 'pull_request'
 
+
+      #- name: Run Ansible Playbook
+      #  run: |
+      #    ansible-playbook -i dynamic-inventory.py main-playbook.yml
+
       - name: Run Ansible Playbook
         uses: dawidd6/action-ansible-playbook@v2
         with:
+          key: ${{secrets.TF_VAR_THE_KEY}}
           directory: ./ansible
           playbook: main-playbook.yml
-          key: ${{secrets.TF_VAR_THE_KEY}}
-          inventory: |
-            all:
-              hosts:
-                johweb-ec2-pub1:
-                  ansible_host: "{{ lookup('env', 'HOST_IP') }}"
-                  ansible_user: "{{ lookup('env', 'WEBSRV_USR') }}"
+          options: |
+            --inventory dynamic-inventory.py
+
+          #inventory: |
+          #  all:
+          #   hosts:
+          #     johweb-ec2-pub1:
+          #        ansible_host: "{{ lookup('env', 'HOST_IP') }}"
+          #        ansible_user: "{{ lookup('env', 'WEBSRV_USR') }}"
   Docker:
     needs: Ansible
     name: "Perform Docker Compose Up"
