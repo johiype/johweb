@@ -1,3 +1,4 @@
+
 # Created using https://www.toptal.com/developers/gitignore
 
 ### Ansible ###
@@ -43,4 +44,4 @@ terraform.rc
 set_env_vars.sh
 
 # Ignore Below Custom Scripts
-**/.init-terraform.sh/*
+#**/.init-terraform.sh/*
