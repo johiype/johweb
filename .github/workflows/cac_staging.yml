@@ -110,7 +110,9 @@ jobs:
 
       - name: Copy Docker Compose File to Web Server
         run: |
-          scp -o StrictHostKeyChecking=no webapp/compose.yml ${{vars.WEBSRV_USR}}@"$web_server_IP":/home/${{vars.WEBSRV_USR}}/
+          echo "$web_server_IP"
+          echo $web_server_IP
+          scp -o StrictHostKeyChecking=no webapp/compose.yml ${{vars.WEBSRV_USR}}@$web_server_IP:/home/${{vars.WEBSRV_USR}}/
 
       - name: Set permissions on Docker Compose file
         run: >
