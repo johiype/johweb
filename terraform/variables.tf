@@ -20,4 +20,4 @@ variable "BUCKET_REGION" {}
 variable "ECR_NAME" {}
 variable "THE_PUB_KEY" {}
 variable "WEBSRV_AMI_ID" {}
-
+variable "BASTION_AMI_ID" {}

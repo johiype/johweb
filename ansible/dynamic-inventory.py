@@ -14,9 +14,13 @@ ec2=boto3.resource("ec2")
 bastion_host = []
 bastion_instance = ec2.instances.filter(Filters=[{'Name': 'tag:server_type', 'Values': ['bastion_host']}])
 for instance in bastion_instance:
-                #print instance.private_ip_address
+	if(instance.private_ip_address == None):
+		continue
+	#print(instance.private_ip_address)
 	bastion_host.append(instance.public_ip_address)
+
 bastion_host = bastion_host[0]
+#print(bastion_host)
 
 inventory = {
         "all": {
@@ -31,6 +35,8 @@ inventory = {
 server_instances = ec2.instances.filter(Filters=[{'Name': 'tag:server_type', 'Values': ['web_server']}])
 
 for instance in server_instances:
-        inventory["all"]["hosts"].append(instance.private_ip_address)
+	if(instance.private_ip_address == None):
+		continue
+	inventory["all"]["hosts"].append(instance.private_ip_address)
 
 print(json.dumps(inventory, indent=4, separators=(',', ': ')))

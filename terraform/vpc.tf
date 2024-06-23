@@ -51,4 +51,21 @@ resource "aws_route_table_association" "johweb-RTA-pub-1" {
 	route_table_id = aws_route_table.johweb-pub-RT.id
 }
 
+# Private route table for private subnet 1
+resource "aws_route_table" "johweb-priv-RT" {
+  vpc_id = aws_vpc.johweb.id
+  tags = {
+    Name = "johweb-priv-RT"
+  }
+}
 
+resource "aws_route_table_association" "johweb-RTA-priv-1" {
+        subnet_id = aws_subnet.johweb-priv-1.id
+        route_table_id = aws_route_table.johweb-priv-RT.id
+}
+
+resource "aws_route" "outbound-nat-route" {
+  route_table_id         = aws_route_table.johweb-priv-RT.id
+  destination_cidr_block = "0.0.0.0/0"
+  network_interface_id   = aws_instance.johweb-bastion-pub1.primary_network_interface_id
+}
