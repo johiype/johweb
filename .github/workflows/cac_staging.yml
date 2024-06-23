@@ -60,7 +60,7 @@ jobs:
       - name: Run Dynamic Inventory Script
         id: pyscript
         run: |
-          cat ansible/dynamic-inventory.py > inventory.json
+          ansible/dynamic-inventory.py > inventory.json
           # jq .web_servers.hosts[0] inventory.json
           web_server_ip=$(jq .web_servers.hosts[0] inventory.json)
           echo "test=${web_server_ip}" >> "$GITHUB_OUTPUT"
