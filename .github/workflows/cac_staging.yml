@@ -20,7 +20,9 @@ jobs:
     name: "Run Anisble Playbook"
     runs-on: ubuntu-latest
     outputs:
-      output1: ${{ steps.pyscript.outputs.test }}
+      web_server_ip: ${{ steps.pyscript.outputs.web }}
+      proxy_server_ip: ${{ steps.pyscript.outputs.proxy }}
+      bastion_host_args: ${{ steps.pyscript.outputs.bastion }}
     #defaults:
       #run:
      #   working-directory: ./ansible
@@ -61,9 +63,13 @@ jobs:
         id: pyscript
         run: |
           ansible/dynamic-inventory.py > inventory.json
-          # jq .web_servers.hosts[0] inventory.json
-          web_server_ip=$(jq .web_servers.hosts[0] inventory.json)
-          echo "test=${web_server_ip}" >> "$GITHUB_OUTPUT"
+          web_server_ip=$(jq -r .web_servers.hosts[0] inventory.json)
+          proxy_server_ip=$(jq -r .web_servers.hosts[0] inventory.json)
+          bastion_host_args=$(jq -r .web_servers.vars.ansible_ssh_common_args inventory.json)
+          
+          echo "web=${web_server_ip}" >> "$GITHUB_OUTPUT"
+          echo "proxy=${proxy_server_ip}" >> "$GITHUB_OUTPUT"
+          echo "bastion=${bastion_host_args}" >> "$GITHUB_OUTPUT"
           
 
       #- name: Run Ansible Playbook
@@ -108,19 +114,19 @@ jobs:
           ls -la webapp
           cat webapp/compose.yml
 
-      - name: Copy Docker Compose File to Web Server
+      - name: Copy Docker Compose File to Web and Proxy Servers
         run: |
-          echo "${{needs.Ansible.outputs.output1}}"
-          echo ${{needs.Ansible.outputs.output1}}
-          scp -o StrictHostKeyChecking=no webapp/compose.yml ${{vars.WEBSRV_USR}}@${{needs.Ansible.outputs.output1}}:/home/${{vars.WEBSRV_USR}}/
+          echo ${{needs.Ansible.outputs.web_server_ip}}
+          scp ${{needs.Ansible.outputs.bastion_host_args}} webapp/compose.yml ${{vars.WEBSRV_USR}}@${{needs.Ansible.outputs.web_server_ip}}:/home/${{vars.WEBSRV_USR}}/
+          scp ${{needs.Ansible.outputs.bastion_host_args}} webapp/compose.yml ${{vars.WEBSRV_USR}}@${{needs.Ansible.outputs.proxy_server_ip}}:/home/${{vars.WEBSRV_USR}}/
 
-      - name: Set permissions on Docker Compose file
+      - name: Set permissions on Docker Compose file in Web Server
         run: >
-          ssh -o StrictHostKeyChecking=no
-          ${{ vars.WEBSRV_USR }}@${{ vars.HOST_IP }}
+          ssh ${{needs.Ansible.outputs.bastion_host_args}}
+          ${{ vars.WEBSRV_USR }}@${{needs.Ansible.outputs.web_server_ip}}
           "sudo chown ${{ vars.WEBSRV_USR }}:${{ vars.WEBSRV_USR }}
-          /home/${{ vars.WEBSRV_USR }}/compose.yml && sudo chmod 0644 /home/${{ vars.WEBSRV_USR }}/compose.yml"
-
+          /home/${{ vars.WEBSRV_USR }}/compose.yml && sudo chmod 0644 /home/${{ vars.WEBSRV_USR }}/compose.yml" 
+          
       - name: Run Docker Compose
         run: >
           ssh -o StrictHostKeyChecking=no
