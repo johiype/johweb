@@ -52,7 +52,6 @@ jobs:
       - name: Run Ansible Playbook
         uses: dawidd6/action-ansible-playbook@v2
         with:
-          key: ${{secrets.TF_VAR_THE_KEY}}
           directory: ./ansible
           playbook: main-playbook.yml
           options: |
