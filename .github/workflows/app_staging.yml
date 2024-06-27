@@ -36,14 +36,16 @@ jobs:
           dockerfile:
             -  'webapp/Dockerfile'
 
-  ECR:
+  ecr:
     name: "Call ECR_Build_Upload Workflow"
     uses: ./.github/workflows/image_build_upload.yml
     needs: changes
     if: ${{ needs.changes.outputs.app_code == 'true' }} || ${{ needs.changes.outputs.dockerfile == 'true' }}
-
+    secrets: inherit
+    
   boto3:
     name: "Gather Instance Details"
+    needs: ecr
     runs-on: ubuntu-latest
     outputs:
       web_server_ip: ${{ steps.pyscript.outputs.web }}
