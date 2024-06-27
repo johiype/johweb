@@ -119,6 +119,13 @@ jobs:
             UserKnownHostsFile=/dev/null
           EOF
           cat ~/.ssh/config
+          
+      - name: "Copy Docker Compose File to Web Server"
+        run: |
+          # make sure in future this compose file is from app-staging and not from main branch
+          scp ${{needs.boto3.outputs.bastion_host_args}} webapp/compose.yml ${{vars.WEBSRV_USR}}@${{needs.boto3.outputs.web_server_ip}}:/home/${{vars.WEBSRV_USR}}/
+          
+          # scp ${{needs.boto3.outputs.bastion_host_args}} webapp/compose.yml ${{vars.WEBSRV_USR}}@${{needs.boto3.outputs.proxy_server_ip}}:/home/${{vars.WEBSRV_USR}}/
 
       - name: "Preparing Staging Environment in EC2 Instance"
         run: |
@@ -126,9 +133,6 @@ jobs:
 
             # Create Staging Directory
             mkdir /home/${{ vars.WEBSRV_USR }}/staging
-
-            # Copy Docker Compose File to Web Server
-            cp webapp/compose.yml /home/${{ vars.WEBSRV_USR }}/staging/   # make sure this compose file is from app-staging and not from main branch
 
             # Set permissions on Staging Docker Compose file in Web Server
             sudo chown ${{ vars.WEBSRV_USR }}:${{ vars.WEBSRV_USR }}/home/${{ vars.WEBSRV_USR }}/staging/compose.yml && sudo chmod 0644 /home/${{ vars.WEBSRV_USR }}/staging/compose.yml
