@@ -100,6 +100,7 @@ jobs:
       - name: Set up SSH key
         run: |
           mkdir -p ~/.ssh
+          echo "${{ secrets.TF_VAR_THE_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
         env:
           PRIVATE_KEY: ${{ secrets.TF_VAR_THE_KEY }}
