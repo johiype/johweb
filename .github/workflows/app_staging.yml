@@ -38,7 +38,7 @@ jobs:
 
   ECR:
     name: "Call ECR_Build_Upload Workflow"
-    uses: johiype/johweb/.github/workflows/image_build_upload.yml
+    uses: ./.github/workflows/image_build_upload.yml
     needs: changes
     if: ${{ needs.changes.outputs.app_code == 'true' }} || ${{ needs.changes.outputs.dockerfile == 'true' }}
 
