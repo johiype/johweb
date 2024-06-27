@@ -1,0 +1,160 @@
+name: "Johweb App Code Staging Workflow"
+on:
+  workflow_dispatch:  # in future change this to 'app-staging' branch
+    branches:
+      - infra-staging
+    paths:
+      - webapp/*
+
+env:
+  TF_VAR_THE_KEY: ${{ secrets.TF_VAR_THE_KEY }}
+  WEBSRV_USR: ${{ vars.WEBSRV_USR }}
+  ECR_ENDPOINT: ${{ vars.ECR_ENDPOINT }}
+  HOST_IP: ${{ vars.HOST_IP }}
+  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  AWS_DEFAULT_REGION: ${{ vars.AWS_DEFAULT_REGION }}
+
+jobs:
+  changes:
+    name: "Check for any code changes in App code or Dockerfile"
+    runs-on: ubuntu-latest
+    outputs:
+      app_code: ${{ steps.filter.outputs.app_code }}
+      dockerfile: ${{ steps.filter.outputs.dockerfile }}
+      
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v2
+      
+    - uses: dorny/paths-filter@v3
+      id: filter
+      with:
+        filters: |
+          app_code:
+            - 'webapp/2106_soft_landing/**'
+          dockerfile:
+            -  'webapp/Dockerfile'
+
+  ECR:
+    name: "Call ECR_Build_Upload Workflow"
+    uses: johiype/johweb/.github/workflows/image_build_upload.yml
+    needs: changes
+    if: ${{ needs.changes.outputs.app_code == 'true' }} || ${{ needs.changes.outputs.dockerfile == 'true' }}
+
+  boto3:
+    name: "Gather Instance Details"
+    runs-on: ubuntu-latest
+    outputs:
+      web_server_ip: ${{ steps.pyscript.outputs.web }}
+      proxy_server_ip: ${{ steps.pyscript.outputs.proxy }}
+      bastion_host_args: ${{ steps.pyscript.outputs.bastion }}
+
+    steps:
+      - name: Install pip3
+        run: sudo apt install python3-pip -y
+
+      - name: Install Boto3
+        run: pip3 install boto3
+
+      - name: Set up SSH key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.TF_VAR_THE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          
+      - name: Edit SSH Config to prevent Host Checking 
+        run: |
+          touch ~/.ssh/config
+          cat << EOF >> ~/.ssh/config
+          Host *
+            StrictHostKeyChecking no
+            UserKnownHostsFile=/dev/null
+          EOF
+          cat ~/.ssh/config
+    
+      - name: Checkout Source Code
+        uses: actions/checkout@v2
+        with:
+          ref: infra-staging # change to 'main' when push branch changes to 'pull_request'
+
+
+      - name: Run Dynamic Inventory Script
+        id: pyscript
+        run: |
+          ansible/dynamic-inventory.py > inventory.json
+          web_server_ip=$(jq -r .web_servers.hosts[0] inventory.json)
+          proxy_server_ip=$(jq -r .web_servers.hosts[0] inventory.json)
+          bastion_host_args=$(jq -r .web_servers.vars.ansible_ssh_common_args inventory.json)
+          
+          echo "web=${web_server_ip}" >> "$GITHUB_OUTPUT"
+          echo "proxy=${proxy_server_ip}" >> "$GITHUB_OUTPUT"
+          echo "bastion=${bastion_host_args}" >> "$GITHUB_OUTPUT"
+          
+  Staging:
+    name: "Prepare and Deploy Web App Staging Environment"
+    runs-on: ubuntu-latest
+    needs: boto3
+
+    steps: 
+      - name: Set up SSH key
+        run: |
+          mkdir -p ~/.ssh
+          chmod 600 ~/.ssh/id_rsa
+        env:
+          PRIVATE_KEY: ${{ secrets.TF_VAR_THE_KEY }}
+
+      - name: Checkout Source Code
+        uses: actions/checkout@v2
+        with:
+          ref: infra-staging        ## change to 'app-staging'
+
+      - name: Edit SSH Config to prevent Host Checking
+        run: |
+          touch ~/.ssh/config
+          cat << EOF >> ~/.ssh/config
+          Host *
+            StrictHostKeyChecking no
+            UserKnownHostsFile=/dev/null
+          EOF
+          cat ~/.ssh/config
+
+      - name: "Preparing Staging Environment in EC2 Instance"
+        run: |
+          ssh ${{needs.boto3.outputs.bastion_host_args}}
+          ${{ vars.WEBSRV_USR }}@${{needs.boto3.outputs.web_server_ip}} '
+
+            # Create Staging Directory
+            mkdir /home/${{ vars.WEBSRV_USR }}/staging
+
+            # Copy Docker Compose File to Web Server
+            cp webapp/compose.yml /home/${{ vars.WEBSRV_USR }}/staging/   # make sure this compose file is from app-staging and not from main branch
+
+            # Set permissions on Staging Docker Compose file in Web Server
+            sudo chown ${{ vars.WEBSRV_USR }}:${{ vars.WEBSRV_USR }}/home/${{ vars.WEBSRV_USR }}/staging/compose.yml && sudo chmod 0644 /home/${{ vars.WEBSRV_USR }}/staging/compose.yml
+
+            # Starting Web Server through Docker Compose
+            docker-compose -f /home/${{ vars.WEBSRV_USR }}/staging/compose.yml up -d johweb
+
+            #### ^^^^^^^^^^ TO-DO: Override port number and container name for staging ^^^^^^^^^^
+            
+          '
+      
+      # - name: Copy Docker Compose File to Web Server
+        # run: |
+          # scp ${{needs.boto3.outputs.bastion_host_args}} webapp/compose.yml ${{vars.WEBSRV_USR}}@${{needs.boto3.outputs.web_server_ip}}:/home/${{vars.WEBSRV_USR}}/
+          # scp ${{needs.boto3.outputs.bastion_host_args}} webapp/compose.yml ${{vars.WEBSRV_USR}}@${{needs.boto3.outputs.proxy_server_ip}}:/home/${{vars.WEBSRV_USR}}/
+
+      #- name: Set permissions on Docker Compose file in Web Server
+        #run: >
+          #ssh ${{needs.boto3.outputs.bastion_host_args}}
+          #${{ vars.WEBSRV_USR }}@${{needs.boto3.outputs.web_server_ip}}
+          #"sudo chown ${{ vars.WEBSRV_USR }}:${{ vars.WEBSRV_USR }}
+          #/home/${{ vars.WEBSRV_USR }}/compose.yml && sudo chmod 0644 /home/${{ vars.WEBSRV_USR }}/compose.yml" 
+          
+      #- name: Starting Web Server through Docker Compose
+        #run: >
+          #ssh ${{needs.boto3.outputs.bastion_host_args}}
+          #${{ vars.WEBSRV_USR }}@${{needs.boto3.outputs.web_server_ip}}
+          #"docker-compose -f /home/${{ vars.WEBSRV_USR }}/compose.yml up -d johweb"
+          
