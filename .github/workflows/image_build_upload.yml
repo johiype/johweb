@@ -1,5 +1,6 @@
 name: "Johweb Docker Image - ECR Upload Workflow. Only Triggered when app code changes"
 on:
+  workflow_call:
   workflow_dispatch:  # in future change this to 'pull_request'
   push:     # in future change this to 'pull_request'
     branches:
