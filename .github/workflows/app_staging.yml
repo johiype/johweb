@@ -122,8 +122,10 @@ jobs:
           
       - name: "Copy Docker Compose File to Web Server"
         run: |
+          ssh ${{needs.boto3.outputs.bastion_host_args}} ${{ vars.WEBSRV_USR }}@${{needs.boto3.outputs.web_server_ip}} "mkdir -p /home/${{ vars.WEBSRV_USR }}/staging"
+          
           # make sure in future this compose file is from app-staging and not from main branch
-          scp ${{needs.boto3.outputs.bastion_host_args}} webapp/compose.yml ${{vars.WEBSRV_USR}}@${{needs.boto3.outputs.web_server_ip}}:/home/${{vars.WEBSRV_USR}}/
+          scp ${{needs.boto3.outputs.bastion_host_args}} webapp/compose.yml ${{vars.WEBSRV_USR}}@${{needs.boto3.outputs.web_server_ip}}:/home/${{vars.WEBSRV_USR}}/staging
           
           # scp ${{needs.boto3.outputs.bastion_host_args}} webapp/compose.yml ${{vars.WEBSRV_USR}}@${{needs.boto3.outputs.proxy_server_ip}}:/home/${{vars.WEBSRV_USR}}/
 
@@ -132,7 +134,7 @@ jobs:
           ssh ${{needs.boto3.outputs.bastion_host_args}} ${{ vars.WEBSRV_USR }}@${{needs.boto3.outputs.web_server_ip}} '
 
             # Create Staging Directory
-            mkdir -p /home/${{ vars.WEBSRV_USR }}/staging
+            # mkdir -p /home/${{ vars.WEBSRV_USR }}/staging
 
             # Set permissions on Staging Docker Compose file in Web Server
             sudo chown ${{ vars.WEBSRV_USR }}:${{ vars.WEBSRV_USR }} /home/${{ vars.WEBSRV_USR }}/staging/compose.yml && sudo chmod 0644 /home/${{ vars.WEBSRV_USR }}/staging/compose.yml
