@@ -132,10 +132,10 @@ jobs:
           ssh ${{needs.boto3.outputs.bastion_host_args}} ${{ vars.WEBSRV_USR }}@${{needs.boto3.outputs.web_server_ip}} '
 
             # Create Staging Directory
-            mkdir /home/${{ vars.WEBSRV_USR }}/staging
+            mkdir -p /home/${{ vars.WEBSRV_USR }}/staging
 
             # Set permissions on Staging Docker Compose file in Web Server
-            sudo chown ${{ vars.WEBSRV_USR }}:${{ vars.WEBSRV_USR }}/home/${{ vars.WEBSRV_USR }}/staging/compose.yml && sudo chmod 0644 /home/${{ vars.WEBSRV_USR }}/staging/compose.yml
+            sudo chown ${{ vars.WEBSRV_USR }}:${{ vars.WEBSRV_USR }} /home/${{ vars.WEBSRV_USR }}/staging/compose.yml && sudo chmod 0644 /home/${{ vars.WEBSRV_USR }}/staging/compose.yml
 
             # Starting Web Server through Docker Compose
             docker-compose -f /home/${{ vars.WEBSRV_USR }}/staging/compose.yml up -d johweb
