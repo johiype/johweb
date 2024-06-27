@@ -122,8 +122,7 @@ jobs:
 
       - name: "Preparing Staging Environment in EC2 Instance"
         run: |
-          ssh ${{needs.boto3.outputs.bastion_host_args}}
-          ${{ vars.WEBSRV_USR }}@${{needs.boto3.outputs.web_server_ip}} '
+          ssh ${{needs.boto3.outputs.bastion_host_args}} ${{ vars.WEBSRV_USR }}@${{needs.boto3.outputs.web_server_ip}} '
 
             # Create Staging Directory
             mkdir /home/${{ vars.WEBSRV_USR }}/staging
