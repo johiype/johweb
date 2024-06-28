@@ -80,10 +80,3 @@ jobs:
           options: |
             --inventory dynamic-inventory.py
 
-          inventory: |
-            all:
-             hosts:
-               johweb-ec2-pub1:
-                  ansible_host: "{{ lookup('env', 'HOST_IP') }}"
-                  ansible_user: "{{ lookup('env', 'WEBSRV_USR') }}"
-
