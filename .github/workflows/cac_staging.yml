@@ -72,73 +72,18 @@ jobs:
           echo "bastion=${bastion_host_args}" >> "$GITHUB_OUTPUT"
           
 
-      #- name: Run Ansible Playbook
-      #  uses: dawidd6/action-ansible-playbook@v2
-      #  with:
-      #    directory: ./ansible
-      #    playbook: main-playbook.yml
-      #    options: |
-      #      --inventory dynamic-inventory.py
-
-          #inventory: |
-          #  all:
-          #   hosts:
-          #     johweb-ec2-pub1:
-          #        ansible_host: "{{ lookup('env', 'HOST_IP') }}"
-          #        ansible_user: "{{ lookup('env', 'WEBSRV_USR') }}"
-  Docker:
-    needs: Ansible
-    name: "Perform Docker Compose Up"
-    runs-on: ubuntu-latest
-    steps:
-      - env:
-          web_server_IP: ${{needs.Ansible.outputs.output1}}
-        run: echo "$web_server_IP"
-        
-      - name: Set up SSH key
-        run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.TF_VAR_THE_KEY }}" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
-        env:
-          PRIVATE_KEY: ${{ secrets.TF_VAR_THE_KEY }}
-
-      - name: Checkout Source Code
-        uses: actions/checkout@v2
+      - name: Run Ansible Playbook
+        uses: dawidd6/action-ansible-playbook@v2
         with:
-          ref: infra-staging # change to 'main' when push branch changes to 'pull_request'
+          directory: ./ansible
+          playbook: main-playbook.yml
+          options: |
+            --inventory dynamic-inventory.py
 
-      - name: Edit SSH Config to prevent Host Checking
-        run: |
-          touch ~/.ssh/config
-          cat << EOF >> ~/.ssh/config
-          Host *
-            StrictHostKeyChecking no
-            UserKnownHostsFile=/dev/null
-          EOF
-          cat ~/.ssh/config
+          inventory: |
+            all:
+             hosts:
+               johweb-ec2-pub1:
+                  ansible_host: "{{ lookup('env', 'HOST_IP') }}"
+                  ansible_user: "{{ lookup('env', 'WEBSRV_USR') }}"
 
-      - name: Copy Docker Compose File to Web and Proxy Servers
-        run: |
-          echo ${{needs.Ansible.outputs.web_server_ip}}
-          scp ${{needs.Ansible.outputs.bastion_host_args}} webapp/compose.yml ${{vars.WEBSRV_USR}}@${{needs.Ansible.outputs.web_server_ip}}:/home/${{vars.WEBSRV_USR}}/
-          scp ${{needs.Ansible.outputs.bastion_host_args}} webapp/compose.yml ${{vars.WEBSRV_USR}}@${{needs.Ansible.outputs.proxy_server_ip}}:/home/${{vars.WEBSRV_USR}}/
-
-      - name: Set permissions on Docker Compose file in Web Server
-        run: >
-          ssh ${{needs.Ansible.outputs.bastion_host_args}}
-          ${{ vars.WEBSRV_USR }}@${{needs.Ansible.outputs.web_server_ip}}
-          "sudo chown ${{ vars.WEBSRV_USR }}:${{ vars.WEBSRV_USR }}
-          /home/${{ vars.WEBSRV_USR }}/compose.yml && sudo chmod 0644 /home/${{ vars.WEBSRV_USR }}/compose.yml" 
-          
-      - name: Starting Web Server through Docker Compose
-        run: >
-          ssh ${{needs.Ansible.outputs.bastion_host_args}}
-          ${{ vars.WEBSRV_USR }}@${{needs.Ansible.outputs.web_server_ip}}
-          "docker-compose -f /home/${{ vars.WEBSRV_USR }}/compose.yml up -d johweb"
-
-      - name: Starting Proxy Server through Docker Compose
-        run: >
-          ssh ${{needs.Ansible.outputs.bastion_host_args}}
-          ${{ vars.WEBSRV_USR }}@${{needs.Ansible.outputs.proxy_server_ip}}
-          "docker-compose -f /home/${{ vars.WEBSRV_USR }}/compose.yml up -d caddy_reverse_proxy"
