@@ -110,7 +110,7 @@ jobs:
       - name: Checkout Source Code
         uses: actions/checkout@v2
         with:
-          ref: infra-staging        ## change to 'app-staging'
+          ref: app-staging        ## change to 'app-staging'
 
       - name: Edit SSH Config to prevent Host Checking
         run: |
@@ -142,7 +142,7 @@ jobs:
             sudo chown ${{ vars.WEBSRV_USR }}:${{ vars.WEBSRV_USR }} /home/${{ vars.WEBSRV_USR }}/staging/compose.yml && sudo chmod 0644 /home/${{ vars.WEBSRV_USR }}/staging/compose.yml
 
             # Starting Web Server through Docker Compose
-            docker-compose -f /home/${{ vars.WEBSRV_USR }}/staging/compose.yml up -d johweb
+            HOST_PORT=5949 CONTAINER_NAME=johweb-staging docker-compose -f /home/${{ vars.WEBSRV_USR }}/staging/compose.yml up -d johweb
 
             #### ^^^^^^^^^^ TO-DO: Override port number and container name for staging ^^^^^^^^^^
             
