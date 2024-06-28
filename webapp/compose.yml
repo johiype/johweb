@@ -4,7 +4,7 @@ services:
     # image: johweb/webserver
     image: 067771804697.dkr.ecr.us-east-2.amazonaws.com/johweb_docker_image_repo
     ports:
-      - "${HOST_IP:-8080}:-80"
+      - "${HOST_IP:-8080}:80"
     container_name: ${CONTAINER_NAME:-johweb}
 
   caddy_reverse_proxy:
