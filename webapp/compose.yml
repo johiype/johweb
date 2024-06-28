@@ -4,14 +4,14 @@ services:
     # image: johweb/webserver
     image: 067771804697.dkr.ecr.us-east-2.amazonaws.com/johweb_docker_image_repo
     ports:
-      - "8080:80"
-    container_name: johweb
+      - "${HOST_IP:-8080}:-80"
+    container_name: ${CONTAINER_NAME:-johweb}
 
   caddy_reverse_proxy:
-    container_name: caddyproxy
+    container_name: ${CONTAINER_NAME:-caddyproxy}
     image: caddy:latest
     restart: unless-stopped
     ports:
-      - "80:80"
+      - "${HOST_IP:-80}:80"
     volumes:
       - $PWD/Caddyfile:/etc/caddy/Caddyfile
