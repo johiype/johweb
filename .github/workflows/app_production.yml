@@ -125,14 +125,14 @@ jobs:
 
             touch /home/${{ vars.WEBSRV_USR }}/Caddyfile
             
-            echo "
+            echo '
             :80 {
             reverse_proxy ${{needs.boto3.outputs.web_server_ip}}:8080
             }
             :5949 {
             reverse_proxy ${{needs.boto3.outputs.web_server_ip}}:5949
             }
-             " > /home/${{ vars.WEBSRV_USR }}/Caddyfile
+             ' > /home/${{ vars.WEBSRV_USR }}/Caddyfile
             
             # Set permissions on Compose file
             sudo chown ${{ vars.WEBSRV_USR }}:${{ vars.WEBSRV_USR }} /home/${{ vars.WEBSRV_USR }}/compose.yml && sudo chmod 0644 /home/${{ vars.WEBSRV_USR }}/compose.yml
