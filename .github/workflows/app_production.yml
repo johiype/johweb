@@ -102,7 +102,7 @@ jobs:
 
           # Copy Compose and Caddfile to Proxy Server
           scp ${{needs.boto3.outputs.bastion_host_args}} webapp/compose.yml ${{vars.WEBSRV_USR}}@${{needs.boto3.outputs.proxy_server_ip}}:/home/${{vars.WEBSRV_USR}}/
-          scp ${{needs.boto3.outputs.bastion_host_args}} webapp/Caddyfile ${{vars.WEBSRV_USR}}@${{needs.boto3.outputs.proxy_server_ip}}:/home/${{vars.WEBSRV_USR}}/
+          # scp ${{needs.boto3.outputs.bastion_host_args}} webapp/Caddyfile ${{vars.WEBSRV_USR}}@${{needs.boto3.outputs.proxy_server_ip}}:/home/${{vars.WEBSRV_USR}}/
 
       - name: "Preparing Production Environment in Web Server"
         run: |
@@ -121,7 +121,18 @@ jobs:
           ssh ${{needs.boto3.outputs.bastion_host_args}} ${{ vars.WEBSRV_USR }}@${{needs.boto3.outputs.proxy_server_ip}} "
 
             # Configuring Caddyfile
-            sed -i 's/{$johweb_websrv_privateip}/${{needs.boto3.outputs.web_server_ip}}/g' /home/${{ vars.WEBSRV_USR }}/Caddyfile
+            # sed -i 's/{$johweb_websrv_privateip}/${{needs.boto3.outputs.web_server_ip}}/g' /home/${{ vars.WEBSRV_USR }}/Caddyfile
+
+            touch /home/${{ vars.WEBSRV_USR }}/Caddyfile
+            cat << EOF >> /home/${{ vars.WEBSRV_USR }}/Caddyfile
+              :80 {
+                reverse_proxy ${{needs.boto3.outputs.web_server_ip}}:8080
+              }
+
+              :5949 {
+                reverse_proxy ${{needs.boto3.outputs.web_server_ip}}:5949
+              }
+            EOF
             
             # Set permissions on Compose file
             sudo chown ${{ vars.WEBSRV_USR }}:${{ vars.WEBSRV_USR }} /home/${{ vars.WEBSRV_USR }}/compose.yml && sudo chmod 0644 /home/${{ vars.WEBSRV_USR }}/compose.yml
