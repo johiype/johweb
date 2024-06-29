@@ -118,7 +118,7 @@ jobs:
 
       - name: "Preparing Production Environment in Proxy Server"
         run: |
-          ssh ${{needs.boto3.outputs.bastion_host_args}} ${{ vars.WEBSRV_USR }}@${{needs.boto3.outputs.proxy_server_ip}} '
+          ssh ${{needs.boto3.outputs.bastion_host_args}} ${{ vars.WEBSRV_USR }}@${{needs.boto3.outputs.proxy_server_ip}} "
 
             # Configuring Caddyfile
             sed -i 's/{$johweb_websrv_privateip}/${{needs.boto3.outputs.web_server_ip}}/g' /home/${{ vars.WEBSRV_USR }}/Caddyfile
@@ -129,5 +129,5 @@ jobs:
             # Starting Web Server through Docker Compose
             docker-compose -f /home/${{ vars.WEBSRV_USR }}/compose.yml up -d caddy_reverse_proxy
             
-          '
+          "
       
