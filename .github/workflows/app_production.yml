@@ -124,14 +124,15 @@ jobs:
             # sed -i 's/{$johweb_websrv_privateip}/${{needs.boto3.outputs.web_server_ip}}/g' /home/${{ vars.WEBSRV_USR }}/Caddyfile
 
             touch /home/${{ vars.WEBSRV_USR }}/Caddyfile
+            
             cat << EOF >> /home/${{ vars.WEBSRV_USR }}/Caddyfile
-              :80 {
-                reverse_proxy ${{needs.boto3.outputs.web_server_ip}}:8080
-              }
+            :80 {
+            reverse_proxy ${{needs.boto3.outputs.web_server_ip}}:8080
+            }
 
-              :5949 {
-                reverse_proxy ${{needs.boto3.outputs.web_server_ip}}:5949
-              }
+            :5949 {
+            reverse_proxy ${{needs.boto3.outputs.web_server_ip}}:5949
+            }
             EOF
             
             # Set permissions on Compose file
