@@ -50,7 +50,7 @@ jobs:
       - name: Checkout Source Code
         uses: actions/checkout@v2
         with:
-          ref: main # change to 'main' when push branch changes to 'pull_request'
+          ref: app-staging # change to 'main' when push branch changes to 'pull_request'
 
 
       - name: Run Dynamic Inventory Script
@@ -82,7 +82,7 @@ jobs:
       - name: "Checkout Source Code"
         uses: actions/checkout@v2
         with:
-          ref: main
+          ref: app-staging
 
       - name: "Edit SSH Config to prevent Host Checking"
         run: |
@@ -114,12 +114,15 @@ jobs:
             # Starting Web Server through Docker Compose
             docker-compose -f /home/${{ vars.WEBSRV_USR }}/compose.yml up -d johweb
             
-          '
+          '         
 
       - name: "Preparing Production Environment in Proxy Server"
         run: |
           ssh ${{needs.boto3.outputs.bastion_host_args}} ${{ vars.WEBSRV_USR }}@${{needs.boto3.outputs.proxy_server_ip}} '
 
+            # Configuring Caddyfile
+            export johweb_websrv_privateip=${{needs.boto3.outputs.web_server_ip}}
+            
             # Set permissions on Compose file
             sudo chown ${{ vars.WEBSRV_USR }}:${{ vars.WEBSRV_USR }} /home/${{ vars.WEBSRV_USR }}/compose.yml && sudo chmod 0644 /home/${{ vars.WEBSRV_USR }}/compose.yml
 
