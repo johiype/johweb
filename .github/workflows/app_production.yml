@@ -126,10 +126,11 @@ jobs:
             touch /home/${{ vars.WEBSRV_USR }}/Caddyfile
             
             echo '
-            :80 {
+            johith.com {
             reverse_proxy ${{needs.boto3.outputs.web_server_ip}}:8080
             }
-            :5949 {
+            
+            staging.johith.com {
             reverse_proxy ${{needs.boto3.outputs.web_server_ip}}:5949
             }
              ' > /home/${{ vars.WEBSRV_USR }}/Caddyfile
