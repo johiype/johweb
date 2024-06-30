@@ -1,6 +1,6 @@
 name: "Johweb App Staging Workflow"
 on:
-  workflow_dispatch:  # in future change this to 'app-staging' branch
+  #workflow_dispatch:  # in future change this to 'app-staging' branch
   push:
     branches:
       - app-staging
