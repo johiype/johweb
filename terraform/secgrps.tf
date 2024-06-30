@@ -57,6 +57,8 @@ resource "aws_security_group" "johweb-pub1-proxyserver-SG" {
                 protocol = "tcp"
                 cidr_blocks = ["0.0.0.0/0"]
       }
+
+
                 tags = {
                         Name = "johweb-pub1-SG"
         }
