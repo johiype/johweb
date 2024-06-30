@@ -36,16 +36,16 @@ jobs:
           dockerfile:
             -  'webapp/Dockerfile'
 
-  ecr:
-    name: "Call ECR_Build_Upload Workflow"
-    uses: ./.github/workflows/image_build_upload.yml
-    needs: changes
-    if: ${{ needs.changes.outputs.app_code == 'true' }} || ${{ needs.changes.outputs.dockerfile == 'true' }}
-    secrets: inherit
+  #ecr:
+    #name: "Call ECR_Build_Upload Workflow"
+    #uses: ./.github/workflows/image_build_upload.yml
+    #needs: changes
+    #if: ${{ needs.changes.outputs.dockerfile == 'true' }}
+    #secrets: inherit
     
   boto3:
     name: "Gather Instance Details"
-    needs: ecr
+    #needs: ecr
     runs-on: ubuntu-latest
     outputs:
       web_server_ip: ${{ steps.pyscript.outputs.web }}
@@ -126,27 +126,33 @@ jobs:
         run: |
           ssh ${{needs.boto3.outputs.bastion_host_args}} ${{ vars.WEBSRV_USR }}@${{needs.boto3.outputs.web_server_ip}} "mkdir -p /home/${{ vars.WEBSRV_USR }}/staging"
           
-          # make sure in future this compose file is from app-staging and not from main branch
           scp ${{needs.boto3.outputs.bastion_host_args}} webapp/compose.yml ${{vars.WEBSRV_USR}}@${{needs.boto3.outputs.web_server_ip}}:/home/${{vars.WEBSRV_USR}}/staging
-          
-          # scp ${{needs.boto3.outputs.bastion_host_args}} webapp/compose.yml ${{vars.WEBSRV_USR}}@${{needs.boto3.outputs.proxy_server_ip}}:/home/${{vars.WEBSRV_USR}}/
 
-      - name: "Preparing Staging Environment in EC2 Instance"
+      - name: "Setting up Hugo"
+        uses: peaceiris/actions-hugo@v3
+        with:
+          hugo-version: '0.128.0'
+
+      - name: "Building Hugo Site"
+        working-directory: ./webapp/johweb-site
+        run: hugo
+
+      - name: "Listing files for the Hugo build"
+        run: ls -la
+
+      - name: "Preparing Staging Environment in Web Server"
         run: |
           ssh ${{needs.boto3.outputs.bastion_host_args}} ${{ vars.WEBSRV_USR }}@${{needs.boto3.outputs.web_server_ip}} '
-
-            # Create Staging Directory
-            # mkdir -p /home/${{ vars.WEBSRV_USR }}/staging
 
             # Set permissions on Staging Docker Compose file in Web Server
             sudo chown ${{ vars.WEBSRV_USR }}:${{ vars.WEBSRV_USR }} /home/${{ vars.WEBSRV_USR }}/staging/compose.yml && sudo chmod 0644 /home/${{ vars.WEBSRV_USR }}/staging/compose.yml
 
             # Starting Web Server through Docker Compose
             HOST_PORT=5949 CONTAINER_NAME=johweb-staging docker-compose -f /home/${{ vars.WEBSRV_USR }}/staging/compose.yml up -d johweb
-
-            #### ^^^^^^^^^^ TO-DO: Override port number and container name for staging ^^^^^^^^^^
             
           '
+
+
       
       # - name: Copy Docker Compose File to Web Server
         # run: |
