@@ -4,8 +4,6 @@ on:
   push:
     branches:
       - app-staging
-    paths:
-      - webapp/*
 
 env:
   TF_VAR_THE_KEY: ${{ secrets.TF_VAR_THE_KEY }}
