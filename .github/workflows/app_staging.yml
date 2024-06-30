@@ -1,4 +1,4 @@
-name: "Johweb App Code Staging Workflow"
+name: "Johweb App Staging Workflow"
 on:
   workflow_dispatch:  # in future change this to 'app-staging' branch
     branches:
@@ -122,11 +122,16 @@ jobs:
           EOF
           cat ~/.ssh/config
           
-      - name: "Copy Docker Compose File to Web Server"
+      - name: "Copy Compose File to Web Server"
         run: |
-          ssh ${{needs.boto3.outputs.bastion_host_args}} ${{ vars.WEBSRV_USR }}@${{needs.boto3.outputs.web_server_ip}} "mkdir -p /home/${{ vars.WEBSRV_USR }}/staging"
-          
-          scp ${{needs.boto3.outputs.bastion_host_args}} webapp/compose.yml ${{vars.WEBSRV_USR}}@${{needs.boto3.outputs.web_server_ip}}:/home/${{vars.WEBSRV_USR}}/staging
+
+          # Creating staging folders 
+          ssh ${{needs.boto3.outputs.bastion_host_args}} ${{ vars.WEBSRV_USR }}@${{needs.boto3.outputs.web_server_ip}} "
+          mkdir -p /home/${{ vars.WEBSRV_USR }}/staging
+          mkdir -p /home/${{ vars.WEBSRV_USR }}/staging/johweb-content
+          "
+          # Copying Compose file to webserver
+          scp ${{needs.boto3.outputs.bastion_host_args}} webapp/compose.yml webapp/compose.staging.yml ${{vars.WEBSRV_USR}}@${{needs.boto3.outputs.web_server_ip}}:/home/${{vars.WEBSRV_USR}}/staging
 
       - name: "Setting up Hugo"
         uses: peaceiris/actions-hugo@v3
@@ -137,18 +142,24 @@ jobs:
         working-directory: ./webapp/johweb-site
         run: hugo
 
-      - name: "Listing files for the Hugo build"
-        run: ls -la
+      - name: "Copying Hugo Built Files to Web Server"
+        run: |
+          scp ${{needs.boto3.outputs.bastion_host_args}} webapp/johweb-site/public/ ${{vars.WEBSRV_USR}}@${{needs.boto3.outputs.web_server_ip}}:/home/${{vars.WEBSRV_USR}}/staging/johweb-content
+        
 
       - name: "Preparing Staging Environment in Web Server"
         run: |
           ssh ${{needs.boto3.outputs.bastion_host_args}} ${{ vars.WEBSRV_USR }}@${{needs.boto3.outputs.web_server_ip}} '
 
-            # Set permissions on Staging Docker Compose file in Web Server
+            # Set permissions on Compose file in Web Server
             sudo chown ${{ vars.WEBSRV_USR }}:${{ vars.WEBSRV_USR }} /home/${{ vars.WEBSRV_USR }}/staging/compose.yml && sudo chmod 0644 /home/${{ vars.WEBSRV_USR }}/staging/compose.yml
+            
+            
+            # Set permissions on Compose.staging file in Web Server
+            sudo chown ${{ vars.WEBSRV_USR }}:${{ vars.WEBSRV_USR }} /home/${{ vars.WEBSRV_USR }}/staging/compose.staging.yml && sudo chmod 0644 /home/${{ vars.WEBSRV_USR }}/staging/compose.staging.yml
 
             # Starting Web Server through Docker Compose
-            HOST_PORT=5949 CONTAINER_NAME=johweb-staging docker-compose -f /home/${{ vars.WEBSRV_USR }}/staging/compose.yml up -d johweb
+            docker-compose -f /home/${{ vars.WEBSRV_USR }}/staging/compose.yml -f /home/${{ vars.WEBSRV_USR }}/staging/compose.staging.yml up -d
             
           '
 
