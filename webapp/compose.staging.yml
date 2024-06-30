@@ -1,0 +1,7 @@
+services:
+  johweb:
+    container_name: "johweb-staging"
+    ports:
+      - 5949:80
+    volumes:
+      - $PWD/staging/johweb-content:/var/www/html

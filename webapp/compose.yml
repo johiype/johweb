@@ -1,16 +1,14 @@
 services:
   johweb:
-    # build: .
-    # image: johweb/webserver
     image: 067771804697.dkr.ecr.us-east-2.amazonaws.com/johweb_docker_image_repo
     ports:
-      - "${HOST_PORT:-8080}:80"
-    container_name: ${CONTAINER_NAME:-johweb}
+      - 8080:80
+    container_name: johweb
     volumes:
-      - $PWD/public:/var/www/html
+      - $PWD/johweb-content:/var/www/html
 
   caddy_reverse_proxy:
-    container_name: ${CONTAINER_NAME:-caddyproxy}
+    container_name: caddyproxy
     image: caddy:latest
     restart: unless-stopped
     ports:
