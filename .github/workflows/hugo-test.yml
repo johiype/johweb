@@ -21,4 +21,9 @@ jobs:
         run: hugo
 
       - name: "Listing files for the Hugo build"
-        run: ls -la
+        run: |
+          ls -la
+
+          ls -la ./webapp
+          
+          ls -la ./webapp/johweb-site
