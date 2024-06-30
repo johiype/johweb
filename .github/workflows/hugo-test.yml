@@ -22,8 +22,12 @@ jobs:
 
       - name: "Listing files for the Hugo build"
         run: |
+          $PWD
+          pwd
+            
           ls -la
 
           ls -la ./webapp
           
           ls -la ./webapp/johweb-site
+          ls -la ./webapp/johweb-site/public
