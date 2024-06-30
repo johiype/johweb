@@ -50,7 +50,7 @@ jobs:
       - name: Checkout Source Code
         uses: actions/checkout@v2
         with:
-          ref: app-staging # change to 'main' when push branch changes to 'pull_request'
+          ref: main # change to 'main' when push branch changes to 'pull_request'
 
 
       - name: Run Dynamic Inventory Script
@@ -82,7 +82,7 @@ jobs:
       - name: "Checkout Source Code"
         uses: actions/checkout@v2
         with:
-          ref: app-staging
+          ref: main
 
       - name: "Edit SSH Config to prevent Host Checking"
         run: |
@@ -100,10 +100,29 @@ jobs:
           # Copy Compose file to Web Server
           scp ${{needs.boto3.outputs.bastion_host_args}} webapp/compose.yml ${{vars.WEBSRV_USR}}@${{needs.boto3.outputs.web_server_ip}}:/home/${{vars.WEBSRV_USR}}/
 
-          # Copy Compose and Caddfile to Proxy Server
+          # Copy Compose file to Proxy Server
           scp ${{needs.boto3.outputs.bastion_host_args}} webapp/compose.yml ${{vars.WEBSRV_USR}}@${{needs.boto3.outputs.proxy_server_ip}}:/home/${{vars.WEBSRV_USR}}/
           # scp ${{needs.boto3.outputs.bastion_host_args}} webapp/Caddyfile ${{vars.WEBSRV_USR}}@${{needs.boto3.outputs.proxy_server_ip}}:/home/${{vars.WEBSRV_USR}}/
 
+      - name: "Setting up Hugo"
+        uses: peaceiris/actions-hugo@v3
+        with:
+          hugo-version: '0.128.0'
+
+      - name: "Building Hugo Site"
+        working-directory: ./webapp/johweb-site
+        run: hugo
+        
+      - name: "Creating johweb-content folder"
+        run: |
+          ssh ${{needs.boto3.outputs.bastion_host_args}} ${{ vars.WEBSRV_USR }}@${{needs.boto3.outputs.web_server_ip}} "
+          mkdir -p /home/${{ vars.WEBSRV_USR }}/johweb-content
+            "
+
+      - name: "Copying Hugo Built Files to Web Server"
+        run: |
+          scp -r ${{needs.boto3.outputs.bastion_host_args}} webapp/johweb-site/public/* ${{vars.WEBSRV_USR}}@${{needs.boto3.outputs.web_server_ip}}:/home/${{vars.WEBSRV_USR}}/johweb-content
+    
       - name: "Preparing Production Environment in Web Server"
         run: |
           ssh ${{needs.boto3.outputs.bastion_host_args}} ${{ vars.WEBSRV_USR }}@${{needs.boto3.outputs.web_server_ip}} '
@@ -112,7 +131,9 @@ jobs:
             sudo chown ${{ vars.WEBSRV_USR }}:${{ vars.WEBSRV_USR }} /home/${{ vars.WEBSRV_USR }}/compose.yml && sudo chmod 0644 /home/${{ vars.WEBSRV_USR }}/compose.yml
 
             # Starting Web Server through Docker Compose
-            docker-compose -f /home/${{ vars.WEBSRV_USR }}/compose.yml up -d johweb
+            # docker-compose -f /home/${{ vars.WEBSRV_USR }}/compose.yml up -d johweb
+
+            docker-compose --project-directory ./ up -d johweb
             
           '         
 
