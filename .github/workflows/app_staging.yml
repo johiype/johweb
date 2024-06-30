@@ -144,7 +144,7 @@ jobs:
 
       - name: "Copying Hugo Built Files to Web Server"
         run: |
-          scp -r ${{needs.boto3.outputs.bastion_host_args}} webapp/johweb-site/public/ ${{vars.WEBSRV_USR}}@${{needs.boto3.outputs.web_server_ip}}:/home/${{vars.WEBSRV_USR}}/staging/johweb-content
+          scp -r ${{needs.boto3.outputs.bastion_host_args}} webapp/johweb-site/public/* ${{vars.WEBSRV_USR}}@${{needs.boto3.outputs.web_server_ip}}:/home/${{vars.WEBSRV_USR}}/staging/johweb-content
         
 
       - name: "Preparing Staging Environment in Web Server"
@@ -159,7 +159,7 @@ jobs:
             sudo chown ${{ vars.WEBSRV_USR }}:${{ vars.WEBSRV_USR }} /home/${{ vars.WEBSRV_USR }}/staging/compose.staging.yml && sudo chmod 0644 /home/${{ vars.WEBSRV_USR }}/staging/compose.staging.yml
 
             # Starting Web Server through Docker Compose
-            docker-compose -f /home/${{ vars.WEBSRV_USR }}/staging/compose.yml -f /home/${{ vars.WEBSRV_USR }}/staging/compose.staging.yml up -d
+            docker-compose -f /home/${{ vars.WEBSRV_USR }}/staging/compose.yml -f /home/${{ vars.WEBSRV_USR }}/staging/compose.staging.yml up -d johweb
             
           '
 
