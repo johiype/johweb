@@ -3,7 +3,7 @@ on:
   workflow_dispatch:  # in future change this to 'app-staging' branch
   push:
     branches:
-      - infra-staging
+      - app-staging
     paths:
       - webapp/*
 
@@ -79,7 +79,7 @@ jobs:
       - name: Checkout Source Code
         uses: actions/checkout@v2
         with:
-          ref: infra-staging # change to 'main' when push branch changes to 'pull_request'
+          ref: app-staging # change to 'main' when push branch changes to 'pull_request'
 
 
       - name: Run Dynamic Inventory Script
