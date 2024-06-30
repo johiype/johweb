@@ -1,10 +1,9 @@
 name: "Johweb App Staging Workflow"
 on:
-  workflow_dispatch:  # in future change this to 'app-staging' branch
+  #workflow_dispatch:  # in future change this to 'app-staging' branch
+  push:
     branches:
-      - infra-staging
-    paths:
-      - webapp/*
+      - app-staging
 
 env:
   TF_VAR_THE_KEY: ${{ secrets.TF_VAR_THE_KEY }}
@@ -36,12 +35,12 @@ jobs:
           dockerfile:
             -  'webapp/Dockerfile'
 
-  #ecr:
-    #name: "Call ECR_Build_Upload Workflow"
-    #uses: ./.github/workflows/image_build_upload.yml
-    #needs: changes
-    #if: ${{ needs.changes.outputs.dockerfile == 'true' }}
-    #secrets: inherit
+  ecr:
+    name: "Call ECR_Build_Upload Workflow"
+    uses: ./.github/workflows/image_build_upload.yml
+    needs: changes
+    if: ${{ needs.changes.outputs.dockerfile == 'true' }}
+    secrets: inherit
     
   boto3:
     name: "Gather Instance Details"
@@ -78,7 +77,7 @@ jobs:
       - name: Checkout Source Code
         uses: actions/checkout@v2
         with:
-          ref: infra-staging # change to 'main' when push branch changes to 'pull_request'
+          ref: app-staging # change to 'main' when push branch changes to 'pull_request'
 
 
       - name: Run Dynamic Inventory Script

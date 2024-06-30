@@ -150,6 +150,10 @@ jobs:
             johith.com {
             reverse_proxy ${{needs.boto3.outputs.web_server_ip}}:8080
             }
+
+            www.johith.com {
+            reverse_proxy ${{needs.boto3.outputs.web_server_ip}}:8080
+            }
             
             staging.johith.com {
             reverse_proxy ${{needs.boto3.outputs.web_server_ip}}:5949
