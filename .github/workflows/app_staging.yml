@@ -1,6 +1,7 @@
 name: "Johweb App Staging Workflow"
 on:
   workflow_dispatch:  # in future change this to 'app-staging' branch
+  push:
     branches:
       - infra-staging
     paths:
@@ -36,12 +37,12 @@ jobs:
           dockerfile:
             -  'webapp/Dockerfile'
 
-  #ecr:
-    #name: "Call ECR_Build_Upload Workflow"
-    #uses: ./.github/workflows/image_build_upload.yml
-    #needs: changes
-    #if: ${{ needs.changes.outputs.dockerfile == 'true' }}
-    #secrets: inherit
+  ecr:
+    name: "Call ECR_Build_Upload Workflow"
+    uses: ./.github/workflows/image_build_upload.yml
+    needs: changes
+    if: ${{ needs.changes.outputs.dockerfile == 'true' }}
+    secrets: inherit
     
   boto3:
     name: "Gather Instance Details"
