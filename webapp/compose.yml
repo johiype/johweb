@@ -6,6 +6,8 @@ services:
     ports:
       - "${HOST_PORT:-8080}:80"
     container_name: ${CONTAINER_NAME:-johweb}
+    volumes:
+      - $PWD/public:/var/www/html
 
   caddy_reverse_proxy:
     container_name: ${CONTAINER_NAME:-caddyproxy}

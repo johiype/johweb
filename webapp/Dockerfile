@@ -7,4 +7,3 @@ RUN apt update && apt install apache2=2.4.52-1ubuntu4.9 -y
 cmd ["/usr/sbin/apache2ctl", "-D", "FOREGROUND"]
 EXPOSE 80
 WORKDIR /var/www/html
-COPY ./2106_soft_landing/ ./
