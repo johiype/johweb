@@ -2,7 +2,7 @@ services:
   johweb:
     image: 067771804697.dkr.ecr.us-east-2.amazonaws.com/johweb_docker_image_repo
     ports:
-      - 8080:80
+      - "8080:80"
     container_name: johweb
     volumes:
       - $PWD/johweb-content:/var/www/html
