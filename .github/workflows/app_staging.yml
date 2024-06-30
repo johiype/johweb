@@ -161,8 +161,7 @@ jobs:
             # Starting Web Server through Docker Compose
             # docker-compose -f /home/${{ vars.WEBSRV_USR }}/staging/compose.yml -f /home/${{ vars.WEBSRV_USR }}/staging/compose.staging.yml up -d johweb
 
-            cd /home/${{ vars.WEBSRV_USR }}/staging/
-            docker-compose up -d johweb
+            docker-compose --project-directory ./staging/ up -d johweb
             
           '
 
