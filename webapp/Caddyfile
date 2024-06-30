@@ -1,5 +1,12 @@
 :80 {
 
-	reverse_proxy {$johweb_ec2_pub1_privateip}:8080
+	reverse_proxy {$johweb_websrv_privateip}:8080
+
+}
+
+
+:5949 {
+
+        reverse_proxy {$johweb_websrv_privateip}:5949
 
 }
