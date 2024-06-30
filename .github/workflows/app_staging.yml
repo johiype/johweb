@@ -131,7 +131,7 @@ jobs:
           mkdir -p /home/${{ vars.WEBSRV_USR }}/staging/johweb-content
           "
           # Copying Compose file to webserver
-          scp ${{needs.boto3.outputs.bastion_host_args}} webapp/compose.yml webapp/compose.staging.yml ${{vars.WEBSRV_USR}}@${{needs.boto3.outputs.web_server_ip}}:/home/${{vars.WEBSRV_USR}}/staging
+          scp ${{needs.boto3.outputs.bastion_host_args}} webapp/compose.yml webapp/docker-compose.override.yml ${{vars.WEBSRV_USR}}@${{needs.boto3.outputs.web_server_ip}}:/home/${{vars.WEBSRV_USR}}/staging
 
       - name: "Setting up Hugo"
         uses: peaceiris/actions-hugo@v3
