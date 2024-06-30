@@ -31,6 +31,8 @@ env:
   TF_VAR_BUCKET_KEY:  ${{ vars.TF_VAR_BUCKET_KEY }}
   TF_VAR_BUCKET_REGION:  ${{ vars.TF_VAR_BUCKET_REGION }}
   TF_VAR_WEBSRV_AMI_ID:  ${{ vars.TF_VAR_WEBSRV_AMI_ID }}
+  TF_VAR_BASTION_AMI_ID: ${{ vars.TF_VAR_BASTION_AMI_ID }}
+  
   TF_VAR_ECR_NAME:  ${{ vars.TF_VAR_ECR_NAME }}
   WEBSRV_USR: ${{ vars.WEBSRV_USR }}
   HOST_IP: ${{ vars.HOST_IP }}
@@ -65,10 +67,6 @@ jobs:
         run: terraform plan -detailed-exitcode -no-color -input=false
         if: github.event_name == 'pull_request'
         continue-on-error: true
-
-     # - run: echo ${{ steps.plan.outputs.stdout }}
-     # - run: echo ${{ steps.plan.outputs.stderr }}
-     # - run: echo ${{ steps.plan.outputs.exitcode }}
 
       - name: Comment on Pull Request
         uses: actions/github-script@v6
