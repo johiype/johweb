@@ -1,0 +1,41 @@
+baseURL: ''
+languageCode: 'en-us'
+title: 'Johith Iype'
+theme: 'PaperMod'
+
+params:
+  assets:
+    favicon: "img/japanese.jpg"
+  profileMode:
+    enabled: true
+    title: Johith Oommen Iype
+    subtitle: "Welcome to my Portfolio!"
+    imageUrl: "img/JohithDP.jpg"
+    imageWidth: 220
+    imageHeight: 220
+    buttons:
+      - name: Posts
+        url: posts
+      - name: Contact Me
+        url: contact
+
+  homeInfoParams:
+    Title: "Hi there \U0001F44B"
+    Content: Welcome to my blog
+
+  socialIcons:
+    - name: github
+      url: "https://github.com/johiype"
+    - name: LinkedIn
+      url: "https://www.linkedin.com/in/johith/"
+
+menu:
+  main:
+    - identifier: posts
+      name: Posts
+      url: /posts/
+      weight: 10
+    - identifier: contact
+      name: Contact Me
+      url: /contact/
+      weight: 20
