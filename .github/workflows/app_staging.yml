@@ -156,10 +156,13 @@ jobs:
             
             
             # Set permissions on Compose.staging file in Web Server
-            sudo chown ${{ vars.WEBSRV_USR }}:${{ vars.WEBSRV_USR }} /home/${{ vars.WEBSRV_USR }}/staging/compose.staging.yml && sudo chmod 0644 /home/${{ vars.WEBSRV_USR }}/staging/compose.staging.yml
+            sudo chown ${{ vars.WEBSRV_USR }}:${{ vars.WEBSRV_USR }} /home/${{ vars.WEBSRV_USR }}/staging/docker-compose.override.yml && sudo chmod 0644 /home/${{ vars.WEBSRV_USR }}/staging/docker-compose.override.yml
 
             # Starting Web Server through Docker Compose
-            docker-compose -f /home/${{ vars.WEBSRV_USR }}/staging/compose.yml -f /home/${{ vars.WEBSRV_USR }}/staging/compose.staging.yml up -d johweb
+            # docker-compose -f /home/${{ vars.WEBSRV_USR }}/staging/compose.yml -f /home/${{ vars.WEBSRV_USR }}/staging/compose.staging.yml up -d johweb
+
+            cd /home/${{ vars.WEBSRV_USR }}/staging/
+            docker-compose up -d johweb
             
           '
 
