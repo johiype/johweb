@@ -49,6 +49,7 @@ set_env_vars.sh
 ### Hugo ###
 # Generated files by hugo
 /public/
+johweb-site/public
 /resources/_gen/
 /assets/jsconfig.json
 hugo_stats.json
