@@ -1,11 +1,12 @@
 
 name: "Johweb Ansible CaC Workflow"
 on:
-  workflow_dispatch:  # in future change this to 'pull_request'
+  workflow_call:
+  push:
     branches:
-      - infra-staging
+      - main
     paths:
-      - ansible/main-playbook.yml
+      - ansible/**
 env:
   TF_VAR_THE_KEY: ${{ secrets.TF_VAR_THE_KEY }}
   WEBSRV_USR: ${{ vars.WEBSRV_USR }}
@@ -14,7 +15,7 @@ env:
   AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
   AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
   AWS_DEFAULT_REGION: ${{ vars.AWS_DEFAULT_REGION }}
-  
+
 jobs:
   Ansible:
     name: "Run Anisble Playbook"
@@ -23,27 +24,21 @@ jobs:
       web_server_ip: ${{ steps.pyscript.outputs.web }}
       proxy_server_ip: ${{ steps.pyscript.outputs.proxy }}
       bastion_host_args: ${{ steps.pyscript.outputs.bastion }}
-    #defaults:
-      #run:
-     #   working-directory: ./ansible
-    steps:
 
+    steps:
       - name: Install pip3
         run: sudo apt install python3-pip -y
 
       - name: Install Boto3
         run: pip3 install boto3
 
-      #- name: Install Ansible
-      #  run: 
-
       - name: Set up SSH key
         run: |
           mkdir -p ~/.ssh
           echo "${{ secrets.TF_VAR_THE_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
-          
-      - name: Edit SSH Config to prevent Host Checking 
+
+      - name: Edit SSH Config to prevent Host Checking
         run: |
           touch ~/.ssh/config
           cat << EOF >> ~/.ssh/config
@@ -52,12 +47,11 @@ jobs:
             UserKnownHostsFile=/dev/null
           EOF
           cat ~/.ssh/config
-    
+
       - name: Checkout Source Code
         uses: actions/checkout@v2
         with:
-          ref: infra-staging # change to 'main' when push branch changes to 'pull_request'
-
+          ref: main
 
       - name: Run Dynamic Inventory Script
         id: pyscript
@@ -66,11 +60,10 @@ jobs:
           web_server_ip=$(jq -r .web_servers.hosts[0] inventory.json)
           proxy_server_ip=$(jq -r .web_servers.hosts[0] inventory.json)
           bastion_host_args=$(jq -r .web_servers.vars.ansible_ssh_common_args inventory.json)
-          
+
           echo "web=${web_server_ip}" >> "$GITHUB_OUTPUT"
           echo "proxy=${proxy_server_ip}" >> "$GITHUB_OUTPUT"
           echo "bastion=${bastion_host_args}" >> "$GITHUB_OUTPUT"
-          
 
       - name: Run Ansible Playbook
         uses: dawidd6/action-ansible-playbook@v2
@@ -80,3 +73,7 @@ jobs:
           options: |
             --inventory dynamic-inventory.py
 
+  Trigger_Ansible_Prod_Workflow:
+    name: "Triggering Anisble Production Workflow"
+    uses: ./.github/workflows/app_production.yml
+    secrets: inherit
