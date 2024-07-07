@@ -1,11 +1,5 @@
 name: "Johweb Terraform IaC Workflow"
 on:
-  workflow_dispatch:  # in future change this to 'pull_request'
-    branches:
-      - infra-staging
-    paths:
-      - terraform/**
-
   pull_request:
     branches:
       - main
@@ -48,7 +42,7 @@ jobs:
       - name: Checkout Source Code
         uses: actions/checkout@v2
         with:
-          ref: infra-staging # change to 'main' when push branch changes to 'pull_request'
+          ref: main
       - name: Setup Terraform with specified version on the runner
         uses: hashicorp/setup-terraform@v3
         with:
@@ -113,13 +107,3 @@ jobs:
       - name: Terraform Apply
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         run: terraform apply -auto-approve -input=false
-
-
-
-
-            #0 = Succeeded with empty diff (no changes)
-            #1 = Error
-            #2 = Succeeded with non-empty diff (changes present)
-
-#       - name: Print Terraform Plan Exit Code
- #       run: echo $?
