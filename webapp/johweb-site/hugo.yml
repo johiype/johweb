@@ -22,7 +22,7 @@ params:
         url: posts
       - name: About Me
         url: aboutme
-      - name: Resume
+      - name: Résumé
         url: resume
       - name: Contact
         url: contact
