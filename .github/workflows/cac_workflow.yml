@@ -76,4 +76,5 @@ jobs:
   Trigger_Ansible_Prod_Workflow:
     name: "Triggering Anisble Production Workflow"
     uses: ./.github/workflows/app_production.yml
+    needs: Ansible
     secrets: inherit
