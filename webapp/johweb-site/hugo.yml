@@ -8,24 +8,28 @@ params:
     favicon: "img/japanese.jpg"
   profileMode:
     enabled: true
-    title: Johith Iype
-    subtitle: "Thank you taking the time to check out my portfolio.
-               Website is still under construction..
-               Please use the links below to know more about me!!"
+    title: ' '
+    subtitle1: "Hi \U0001F44B, I'm **Johith Iype**. Thank you for visiting!"
+    subtitle2: "I work as an IT Admin. I like tinkering with amazing pieces of software and glueing them together to make some cool projects.
+                I've built this website to showcase my nerdy side. You can see some of my personal homeserver projects **[here](projects)**"
+    subtitle3: " I'm always open for a chat and exciting opportunities, so feel free to contact me!"
+    subtitle4: "To know more about me, use the links below."
     imageUrl: "img/JohithDP.jpg"
-    imageWidth: 220
-    imageHeight: 220
+    imageWidth: 195
+    imageHeight: 190
     buttons:
-      - name: Posts
+      - name: Blog
         url: posts
-      - name: Profile
-        url: profile
+      - name: About Me
+        url: aboutme
       - name: Resume
         url: resume
-      - name: Contact Me
+      - name: Contact
         url: contact
-      - name: Developing this website
-        url: website-development
+      - name: Projects
+        url: projects
+      - name: Building this website
+        url: /posts/website-development
 
   homeInfoParams:
     Title: "Hi there \U0001F44B"
@@ -37,11 +41,14 @@ params:
       url: "https://github.com/johiype"
     - name: LinkedIn
       url: "https://www.linkedin.com/in/johith/"
+    - name: TryHackMe
+      url: "https://tryhackme.com/p/lasereyes"
+  ShowBreadCrumbs: true
 
 menu:
   main:
-    - identifier: posts
-      name: Posts
+    - identifier: blog
+      name: Blog
       url: /posts/
       weight: 10
     - identifier: contact

@@ -31,10 +31,8 @@
         {{- end }}
         {{- end }}
         <h1>{{ .title | default site.Title | markdownify }}</h1>
-        <span>{{ .subtitle1 | markdownify }}</span>
+        <span>{{ .subtitle1 | markdownify }}</span>	
 	<span>{{ .subtitle2 | markdownify }}</span>
-	<span>{{ .subtitle3 | markdownify }}</span>
-	<span>{{ .subtitle4 | markdownify }}</span>
         {{- partial "social_icons.html" -}}
 
         {{- with .buttons }}

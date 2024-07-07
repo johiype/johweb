@@ -6,6 +6,10 @@
     padding: var(--gap);
 }
 
+body {
+	font-size: 19px;
+}
+
 .page-header h1 {
     font-size: 40px;
 }
