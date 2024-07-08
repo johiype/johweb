@@ -21,17 +21,6 @@ output "johweb-PublicIP" {
 	value = aws_instance.johweb-ec2-priv1.private_ip
 }
 
-#resource "aws_instance" "johweb-bastion-pub1" {
-#	ami = "${var.WEBSRV_AMI_ID}"
-#	instance_type = "t2.nano"
-#	subnet_id = aws_subnet.johweb-pub-1.id
-#	key_name = "johweb_keypair"
-#	vpc_security_group_ids = [aws_security_group.johweb-pub1-bastion-SG.id]
-#	tags = {
-#		Name = "johweb-bastion-pub1",
-#	server_type = "bastion_host"
-#	}
-# }
 
 # Network Interface Created for Bastion Host, so we can disbale source destionation check for fck-nat
 resource "aws_network_interface" "johweb-bastion-networkinterface" { 
@@ -75,5 +64,3 @@ resource "aws_instance" "johweb-proxy-pub1" {
 output "bastion-PublicIP" {
         value = aws_instance.johweb-bastion-pub1.public_ip
 }
-
-######
