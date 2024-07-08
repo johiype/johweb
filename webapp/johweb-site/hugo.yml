@@ -5,7 +5,7 @@ theme: 'PaperMod'
 
 params:
   assets:
-    favicon: "img/japanese.jpg"
+    favicon: "img/favicon-jo.png"
   profileMode:
     enabled: true
     title: ' '
