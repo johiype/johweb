@@ -1,5 +1,6 @@
 name: "Johweb Terraform IaC Workflow"
 on:
+  workflow_dispatch:
   pull_request:
     branches:
       - main
@@ -26,7 +27,7 @@ env:
   TF_VAR_BUCKET_REGION:  ${{ vars.TF_VAR_BUCKET_REGION }}
   TF_VAR_WEBSRV_AMI_ID:  ${{ vars.TF_VAR_WEBSRV_AMI_ID }}
   TF_VAR_BASTION_AMI_ID: ${{ vars.TF_VAR_BASTION_AMI_ID }}
-  
+
   TF_VAR_ECR_NAME:  ${{ vars.TF_VAR_ECR_NAME }}
   WEBSRV_USR: ${{ vars.WEBSRV_USR }}
   HOST_IP: ${{ vars.HOST_IP }}
@@ -105,5 +106,12 @@ jobs:
         run: exit 1
 
       - name: Terraform Apply
-        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        if: (github.ref == 'refs/heads/main' && github.event_name == 'push') || (github.event_name == 'workflow_dispatch')
         run: terraform apply -auto-approve -input=false
+
+  Trigger_Ansible_Workflow:
+    name: "Trigger Ansible Workflow"
+    uses: ./.github/workflows/cac_workflow.yml
+    if: github.event_name != 'pull_request'
+    needs: Terraform
+    secrets: inherit
