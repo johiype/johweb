@@ -112,5 +112,6 @@ jobs:
   Trigger_Ansible_Workflow:
     name: "Trigger Ansible Workflow"
     uses: ./.github/workflows/cac_workflow.yml
+    if: github.event_name != 'pull_request'
     needs: Terraform
     secrets: inherit
