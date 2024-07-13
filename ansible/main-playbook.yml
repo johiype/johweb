@@ -3,9 +3,20 @@
   become: yes
   gather_facts: no
   tasks:
+
+    - name: Wait 300 seconds, but only start checking after 60 seconds
+      ansible.builtin.wait_for_connection:
+        delay: 60
+        timeout: 300
+
     - name: Update all packages
       yum:
         name: "*"
+        state: latest
+
+    - name: Install ECR Credential Helper
+      ansible.builtin.dnf:
+        name: amazon-ecr-credential-helper
         state: latest
 
     - name: Install required packages
@@ -63,21 +74,6 @@
       debug:
         msg: "Docker Compose version: {{ docker_compose_version.stdout }}"
 
-    #- name: Copy Docker Compose file from local machine to remote instance
-     # copy:
-     #   src: /home/johith/johith-portfolio/webapp/compose.yml
-     #   dest: "/home/{{ lookup('env', 'websrv_usr') }}/compose.yml"
-     #   owner: "{{ lookup('env', 'WEBSRV_USR') }}"
-     #   group: "{{ lookup('env', 'WEBSRV_USR') }}"
-     #   mode: '0644'
-
-   # - name: Copy Caddyfile from local machine to remote instance
-   #   copy:
-   #     src: /home/johith/johith-portfolio/webapp/Caddyfile
-    #    dest: "/home/{{ lookup('env', 'WEBSRV_USR') }}/"
-    #    owner: "{{ lookup('env', 'WEBSRV_USR') }}"
-    #    group: "{{ lookup('env', 'WEBSRV_USR') }}"
-    #    mode: '0644'
 
     - name: Ensure Docker config directory exists
       file:
@@ -87,13 +83,13 @@
         owner: "{{ lookup('env', 'WEBSRV_USR') }}"
         group: "{{ lookup('env', 'WEBSRV_USR') }}"
 
-    - name: Set environment variables and install ECR credential helper
-      shell: |
-        export GOPATH=/home/{{ lookup('env', 'WEBSRV_USR') }}/go
-        export PATH=$PATH:$GOPATH/bin
-        export DEAFULT_ECR_HELPER_CFG="/home/{{ lookup('env', 'WEBSRV_USR') }}/.docker/config.json"
-        go install github.com/awslabs/amazon-ecr-credential-helper/ecr-login/cli/docker-credential-ecr-login@latest
-        mv go/bin/docker-credential-ecr-login /usr/bin/
+    #- name: Set environment variables and install ECR credential helper
+      #shell: |
+      #  export GOPATH=/home/{{ lookup('env', 'WEBSRV_USR') }}/go
+      #  export PATH=$PATH:$GOPATH/bin
+      #  export DEAFULT_ECR_HELPER_CFG="/home/{{ lookup('env', 'WEBSRV_USR') }}/.docker/config.json"
+      #  go install github.com/awslabs/amazon-ecr-credential-helper/ecr-login/cli/docker-credential-ecr-login@latest
+      #  mv go/bin/docker-credential-ecr-login /usr/bin/
 
     - name: Change ownership of Go directory to the user
       file:
