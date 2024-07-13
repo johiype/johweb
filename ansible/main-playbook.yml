@@ -14,10 +14,10 @@
         name: "*"
         state: latest
 
-    - name: Install ECR Credential Helper
-      ansible.builtin.dnf:
-        name: amazon-ecr-credential-helper
-        state: latest
+    #- name: Install ECR Credential Helper
+    #  ansible.builtin.dnf:
+     #   name: amazon-ecr-credential-helper
+     #   state: latest
 
     - name: Install required packages
       yum:
@@ -47,8 +47,8 @@
 
     - name: Download Docker Compose
       get_url:
-        # url: "https://github.com/docker/compose/releases/download/v2.27.1/docker-compose-linux-x86_64"
-        url: "https://github.com/docker/compose/releases/download/v2.27.1/docker-compose-linux-aarch64"
+        url: "https://github.com/docker/compose/releases/download/v2.27.1/docker-compose-linux-x86_64"
+        #url: "https://github.com/docker/compose/releases/download/v2.27.1/docker-compose-linux-aarch64"
         dest: /usr/local/bin/docker-compose
         mode: '0755'
 
@@ -83,13 +83,13 @@
         owner: "{{ lookup('env', 'WEBSRV_USR') }}"
         group: "{{ lookup('env', 'WEBSRV_USR') }}"
 
-    #- name: Set environment variables and install ECR credential helper
-      #shell: |
-      #  export GOPATH=/home/{{ lookup('env', 'WEBSRV_USR') }}/go
-      #  export PATH=$PATH:$GOPATH/bin
-      #  export DEAFULT_ECR_HELPER_CFG="/home/{{ lookup('env', 'WEBSRV_USR') }}/.docker/config.json"
-      #  go install github.com/awslabs/amazon-ecr-credential-helper/ecr-login/cli/docker-credential-ecr-login@latest
-      #  mv go/bin/docker-credential-ecr-login /usr/bin/
+    - name: Set environment variables and install ECR credential helper
+      shell: |
+        export GOPATH=/home/{{ lookup('env', 'WEBSRV_USR') }}/go
+        export PATH=$PATH:$GOPATH/bin
+        export DEAFULT_ECR_HELPER_CFG="/home/{{ lookup('env', 'WEBSRV_USR') }}/.docker/config.json"
+        go install github.com/awslabs/amazon-ecr-credential-helper/ecr-login/cli/docker-credential-ecr-login@latest
+        mv go/bin/docker-credential-ecr-login /usr/bin/
 
     - name: Change ownership of Go directory to the user
       file:
@@ -98,19 +98,6 @@
         owner: "{{ lookup('env', 'WEBSRV_USR') }}"
         group: "{{ lookup('env', 'WEBSRV_USR') }}"
         recurse: yes
-
-    #- name: Add ECR credential helper configuration to Docker config.json
-    #  blockinfile:
-    #    path: "/home/{{ lookup('env', 'WEBSRV_USR') }}/.docker/config.json"
-    #    block: |
-    #      {
-    #        \"credHelpers\": {
-    #          \"{{ lookup('env', 'ECR_ENDPOINT') }}\": \"ecr-login\"
-    #        }
-    #      }
-     #   create: yes
-     #   mode: '0644'
-     #   marker: ""
 
     - name: Add ECR credential helper configuration to Docker config.json
       template:
@@ -122,25 +109,3 @@
       service:
         name: docker
         state: restarted
-
-#- name: johweserver Apache2 Container Setup
-#  hosts: johweb-ec2-pub1
-#  become_user: "{{ lookup('env', 'websrv_usr') }}"
-#  gather_facts: no
-#  tasks:
-
- #   - name: Checking if Docker is running
- #     service:
- #       name: docker
- #       state: started
- #       enabled: yes
-
-#    - name: Run Docker Compose up
-#      shell: docker-compose up -d
-#      args:
-#        executable: /bin/bash
-#        chdir: "/home/{{ lookup('env', 'websrv_usr') }}"
-
-
-
-## Triggering Ansible Playbook
