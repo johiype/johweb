@@ -5,14 +5,20 @@ resource "aws_key_pair" "johweb_keypair" {
 
 resource "aws_instance" "johweb-ec2-priv1" {
 	ami = "${var.WEBSRV_AMI_ID}"
-	instance_type = "t2.micro"      
+	instance_type = "t4g.nano"      
 	subnet_id = aws_subnet.johweb-priv-1.id
 	key_name = "johweb_keypair"
 	vpc_security_group_ids = [aws_security_group.johweb-priv1-webserver-SG.id]
 	iam_instance_profile = "johweb-ec2-pub1"   # need to change name of IAM role in future
+	
 	tags = {
 		Name = "johweb-ec2-priv1",
 		server_type = "web_server"
+	}
+
+	credit_specification {
+		cpu_credits = "standard"
+  
 	}
 }
 
@@ -33,7 +39,7 @@ resource "aws_network_interface" "johweb-bastion-networkinterface" {
 
 resource "aws_instance" "johweb-bastion-pub1" {
         ami = "${var.BASTION_AMI_ID}"
-        instance_type = "t2.nano"
+        instance_type = "t4g.nano"
         #subnet_id = aws_subnet.johweb-pub-1.id
         key_name = "johweb_keypair"
         #vpc_security_group_ids = [aws_security_group.johweb-pub1-bastion-SG.id]
@@ -47,17 +53,29 @@ resource "aws_instance" "johweb-bastion-pub1" {
                 Name = "johweb-bastion-pub1",
                 server_type = "bastion_host"
         }
+
+	 credit_specification {
+                cpu_credits = "standard"
+
+        }
 }
 
 resource "aws_instance" "johweb-proxy-pub1" {
 	ami = "${var.WEBSRV_AMI_ID}"
-	instance_type = "t2.nano"
+	instance_type = "t4g.nano"
 	subnet_id = aws_subnet.johweb-pub-1.id
 	key_name = "johweb_keypair"
 	vpc_security_group_ids = [aws_security_group.johweb-pub1-proxyserver-SG.id]
+	
+
 	tags = {
                 Name = "johweb-proxy-pub1",
 		server_type = "proxy_server"
+        }
+
+	 credit_specification {
+                cpu_credits = "standard"
+
         }
 }
 
