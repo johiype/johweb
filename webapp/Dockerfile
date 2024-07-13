@@ -1,4 +1,4 @@
-FROM ubuntu:jammy-20240530
+FROM arm64v8/ubuntu:jammy-20240530
 LABEL "AUTHOR" = "Johith Iype"
 LABEL "PROJECT" = "johith.com"
 
