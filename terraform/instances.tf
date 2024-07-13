@@ -5,7 +5,7 @@ resource "aws_key_pair" "johweb_keypair" {
 
 resource "aws_instance" "johweb-ec2-priv1" {
 	ami = "${var.WEBSRV_AMI_ID}"
-	instance_type = "t2.micro"      
+	instance_type = "t4g.nano"      
 	subnet_id = aws_subnet.johweb-priv-1.id
 	key_name = "johweb_keypair"
 	vpc_security_group_ids = [aws_security_group.johweb-priv1-webserver-SG.id]
@@ -33,7 +33,7 @@ resource "aws_network_interface" "johweb-bastion-networkinterface" {
 
 resource "aws_instance" "johweb-bastion-pub1" {
         ami = "${var.BASTION_AMI_ID}"
-        instance_type = "t2.nano"
+        instance_type = "t4g.nano"
         #subnet_id = aws_subnet.johweb-pub-1.id
         key_name = "johweb_keypair"
         #vpc_security_group_ids = [aws_security_group.johweb-pub1-bastion-SG.id]
@@ -51,7 +51,7 @@ resource "aws_instance" "johweb-bastion-pub1" {
 
 resource "aws_instance" "johweb-proxy-pub1" {
 	ami = "${var.WEBSRV_AMI_ID}"
-	instance_type = "t2.nano"
+	instance_type = "t4g.nano"
 	subnet_id = aws_subnet.johweb-pub-1.id
 	key_name = "johweb_keypair"
 	vpc_security_group_ids = [aws_security_group.johweb-pub1-proxyserver-SG.id]
