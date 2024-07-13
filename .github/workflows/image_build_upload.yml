@@ -28,6 +28,13 @@ jobs:
         with:
           ref: app-staging
 
+      # Building arm64 based docker image on a x86_64 based runner.
+      # The need for arm64 docker image is for the arm64 based ec2 instances
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+        with:
+          platforms: arm64
+
       - name: Build and Push Image to Docker Hub
         uses: docker/build-push-action@v6
         with:
