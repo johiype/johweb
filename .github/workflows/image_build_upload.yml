@@ -4,8 +4,8 @@ on:
 
 env:
   WEBSRV_USR: ${{ vars.WEBSRV_USR }}
-  DOCKERHUB_USERNAME: ${{ vars.DOCKERHUB_USERNAME }}
-  DOCKERHUB_TOKEN: ${{ vars.DOCKERHUB_TOKEN }}
+  DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+  DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
 
   #ECR_ENDPOINT: ${{ vars.ECR_ENDPOINT }}
   #AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
@@ -26,16 +26,14 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v3
         with:
-          ref: infra-staging
-          path: webapp
+          ref: app-staging
 
       - name: Build and Push Image to Docker Hub
         uses: docker/build-push-action@v6
         with:
-          context: .
+          context: webapp/.
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/johwebserver:latest
-
 
   #AWS_ECR:
   #  name: "Build, tag and push docker image to ECR"
