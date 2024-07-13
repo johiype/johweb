@@ -3,10 +3,21 @@
   become: yes
   gather_facts: no
   tasks:
+
+    - name: Wait 300 seconds, but only start checking after 60 seconds
+      ansible.builtin.wait_for_connection:
+        delay: 60
+        timeout: 300
+
     - name: Update all packages
       yum:
         name: "*"
         state: latest
+
+    #- name: Install ECR Credential Helper
+    #  ansible.builtin.dnf:
+     #   name: amazon-ecr-credential-helper
+     #   state: latest
 
     - name: Install required packages
       yum:
@@ -36,7 +47,8 @@
 
     - name: Download Docker Compose
       get_url:
-        url: "https://github.com/docker/compose/releases/download/v2.27.1/docker-compose-linux-x86_64"
+        #url: "https://github.com/docker/compose/releases/download/v2.27.1/docker-compose-linux-x86_64"
+        url: "https://github.com/docker/compose/releases/download/v2.27.1/docker-compose-linux-aarch64"
         dest: /usr/local/bin/docker-compose
         mode: '0755'
 
@@ -62,21 +74,6 @@
       debug:
         msg: "Docker Compose version: {{ docker_compose_version.stdout }}"
 
-    #- name: Copy Docker Compose file from local machine to remote instance
-     # copy:
-     #   src: /home/johith/johith-portfolio/webapp/compose.yml
-     #   dest: "/home/{{ lookup('env', 'websrv_usr') }}/compose.yml"
-     #   owner: "{{ lookup('env', 'WEBSRV_USR') }}"
-     #   group: "{{ lookup('env', 'WEBSRV_USR') }}"
-     #   mode: '0644'
-
-   # - name: Copy Caddyfile from local machine to remote instance
-   #   copy:
-   #     src: /home/johith/johith-portfolio/webapp/Caddyfile
-    #    dest: "/home/{{ lookup('env', 'WEBSRV_USR') }}/"
-    #    owner: "{{ lookup('env', 'WEBSRV_USR') }}"
-    #    group: "{{ lookup('env', 'WEBSRV_USR') }}"
-    #    mode: '0644'
 
     - name: Ensure Docker config directory exists
       file:
@@ -102,19 +99,6 @@
         group: "{{ lookup('env', 'WEBSRV_USR') }}"
         recurse: yes
 
-    #- name: Add ECR credential helper configuration to Docker config.json
-    #  blockinfile:
-    #    path: "/home/{{ lookup('env', 'WEBSRV_USR') }}/.docker/config.json"
-    #    block: |
-    #      {
-    #        \"credHelpers\": {
-    #          \"{{ lookup('env', 'ECR_ENDPOINT') }}\": \"ecr-login\"
-    #        }
-    #      }
-     #   create: yes
-     #   mode: '0644'
-     #   marker: ""
-
     - name: Add ECR credential helper configuration to Docker config.json
       template:
         src: docker_config.json.j2
@@ -125,25 +109,3 @@
       service:
         name: docker
         state: restarted
-
-#- name: johweserver Apache2 Container Setup
-#  hosts: johweb-ec2-pub1
-#  become_user: "{{ lookup('env', 'websrv_usr') }}"
-#  gather_facts: no
-#  tasks:
-
- #   - name: Checking if Docker is running
- #     service:
- #       name: docker
- #       state: started
- #       enabled: yes
-
-#    - name: Run Docker Compose up
-#      shell: docker-compose up -d
-#      args:
-#        executable: /bin/bash
-#        chdir: "/home/{{ lookup('env', 'websrv_usr') }}"
-
-
-
-## Triggering Ansible Playbook
