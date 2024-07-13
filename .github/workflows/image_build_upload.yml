@@ -32,7 +32,7 @@ jobs:
       - name: Build and Push Image to Docker Hub
         uses: docker/build-push-action@v6
         with:
-          context: webapp
+          context: webapp/Dockerfile
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/johwebserver:latest
 
