@@ -49,6 +49,7 @@ jobs:
 
   boto3:
     name: "Gather Instance Details"
+    needs: ecr
     runs-on: ubuntu-latest
     outputs:
       web_server_ip: ${{ steps.pyscript.outputs.web }}
