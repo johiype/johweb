@@ -36,7 +36,6 @@ jobs:
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/johwebserver:latest
 
-
   #AWS_ECR:
   #  name: "Build, tag and push docker image to ECR"
   #  runs-on: ubuntu-latest
