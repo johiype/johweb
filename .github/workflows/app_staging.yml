@@ -37,7 +37,7 @@ jobs:
             -  'webapp/Dockerfile'
 
   ecr:
-    name: "Call ECR_Build_Upload Workflow"
+    name: "Call Docker_Build_Upload Workflow"
     uses: ./.github/workflows/image_build_upload.yml
     needs: changes
     if: ${{ needs.changes.outputs.dockerfile == 'true' }}
