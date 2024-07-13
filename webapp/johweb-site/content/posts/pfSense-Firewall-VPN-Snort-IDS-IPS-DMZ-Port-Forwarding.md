@@ -275,49 +275,49 @@ Add OpenVPN’s certificate authority on pfSense. This would allow pfSense to pe
 
 Copy the certificate from your OpenVPN configuration
 
-![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/1e2e9ebe-19b6-446e-87f6-abdf4b2d508d/Untitled.png)
+![Untitled](https://johith.notion.site/image/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F1e2e9ebe-19b6-446e-87f6-abdf4b2d508d%2FUntitled.png?table=block&id=9d2f09fa-4d23-41cb-87cf-bc74048893f6&spaceId=35060c7e-3917-4cd6-a745-937d3114d009&width=2000&userId=&cache=v2)
 
 Create a new certificate as shown below:
 
-![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/c5c36867-3d0d-4b6d-bc12-d2f1737675c8/Untitled.png)
+![Untitled](https://johith.notion.site/image/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2Fc5c36867-3d0d-4b6d-bc12-d2f1737675c8%2FUntitled.png?table=block&id=76d93369-ceb4-4faf-92fe-1737bc256f1b&spaceId=35060c7e-3917-4cd6-a745-937d3114d009&width=2000&userId=&cache=v2)
 
 Paste the copied certificate into the respective field as shown below:
 
-![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/9aa49d32-6300-4ac4-a071-0c3b0a9d637e/Untitled.png)
+![Untitled](https://johith.notion.site/image/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F9aa49d32-6300-4ac4-a071-0c3b0a9d637e%2FUntitled.png?table=block&id=7b6a52c9-cbaf-4e19-b0aa-88e16bd631b1&spaceId=35060c7e-3917-4cd6-a745-937d3114d009&width=2000&userId=&cache=v2)
 
 The certificate is added:
 
-![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/b9c91544-4126-4da8-8edf-706cb9b8f5ff/Untitled.png)
+![Untitled](https://johith.notion.site/image/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2Fb9c91544-4126-4da8-8edf-706cb9b8f5ff%2FUntitled.png?table=block&id=3e381723-574d-4e14-b587-2c4c76451a2b&spaceId=35060c7e-3917-4cd6-a745-937d3114d009&width=2000&userId=&cache=v2)
 
 ### **Step Two: Configure the OpenVPN Client**
 
 In this step, you will add an OpenVPN client to encrypt your data and tunnel it to the VPN server.
 
-![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/54c0b492-6323-4ca1-8228-db5bc3e51887/Untitled.png)
+![Untitled](https://johith.notion.site/image/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F54c0b492-6323-4ca1-8228-db5bc3e51887%2FUntitled.png?table=block&id=b2061b6e-c07f-43cb-82b3-23b97b03e7f6&spaceId=35060c7e-3917-4cd6-a745-937d3114d009&width=1250&userId=&cache=v2)
 
 Provide mode and endpoint configuration details as below. 
 
-![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/a90237da-0d47-408a-997d-a794446020c7/Untitled.png)
+![Untitled](https://johith.notion.site/image/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2Fa90237da-0d47-408a-997d-a794446020c7%2FUntitled.png?table=block&id=91cc85da-e5f2-480e-b0fd-9f6cef7463b7&spaceId=35060c7e-3917-4cd6-a745-937d3114d009&width=1250&userId=&cache=v2)
 
 Provide user authentication settings as below. The user authentication details can be found on your VPN provider’s dashboard
 
-![Proton VPN dashboard](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/8da62a11-a19b-4318-9b5c-aa7d21eb9ad4/Untitled.png)
+![Proton VPN dashboard](https://johith.notion.site/image/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F8da62a11-a19b-4318-9b5c-aa7d21eb9ad4%2FUntitled.png?table=block&id=0eac8089-3b00-438a-a420-924a21c2fb68&spaceId=35060c7e-3917-4cd6-a745-937d3114d009&width=1250&userId=&cache=v2)
 
 Proton VPN dashboard
 
-![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/fddadd05-4238-4c77-910f-c95556722986/Untitled.png)
+![Untitled]https://johith.notion.site/image/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2Ffddadd05-4238-4c77-910f-c95556722986%2FUntitled.png?table=block&id=e28a1d62-0aaf-43e9-b42b-d3aeae94b632&spaceId=35060c7e-3917-4cd6-a745-937d3114d009&width=1250&userId=&cache=v2)
 
 Provide cryptographic settings as below. The TLS key can be found in your OpenVPN configuration file
 
-![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/990a6e49-cb71-465c-9a89-8403f45647ff/Untitled.png)
+![Untitled](https://johith.notion.site/image/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F990a6e49-cb71-465c-9a89-8403f45647ff%2FUntitled.png?table=block&id=af24bcad-2a03-46de-a45c-9c883ef1af9a&spaceId=35060c7e-3917-4cd6-a745-937d3114d009&width=1140&userId=&cache=v2)
 
 Provide ping and advanced configuration as below
 
-![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/8c4b68ad-28c2-4a1e-9a21-2f071927ead1/Untitled.png)
+![Untitled](https://johith.notion.site/image/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F8c4b68ad-28c2-4a1e-9a21-2f071927ead1%2FUntitled.png?table=block&id=c9b56894-63aa-4ca8-95f5-579f5f6eb96e&spaceId=35060c7e-3917-4cd6-a745-937d3114d009&width=1250&userId=&cache=v2)
 
 At this point the status of the new VPN client should be showing **up**
 
-![Head over to *Status* tab >> *OpenVPN*](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/ee937e94-d05b-4066-b537-4fc90b55a90f/Untitled.png)
+![Head over to *Status* tab >> *OpenVPN*](https://johith.notion.site/image/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2Fee937e94-d05b-4066-b537-4fc90b55a90f%2FUntitled.png?table=block&id=b00c2a6d-a54e-4a3c-8a4b-76451dde8194&spaceId=35060c7e-3917-4cd6-a745-937d3114d009&width=1250&userId=&cache=v2)
 
 Head over to *Status* tab >> *OpenVPN*
 
@@ -327,7 +327,7 @@ We have setup the OpenVPN client on pfSense. But that’s not all, we now have t
 
 Assign new interface for OpenVPN as shown below under *Interfaces >> Assignments*
 
-![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/d1a24040-ea9f-41bb-ae1a-7658fa689b2a/Untitled.png)
+![Untitled](https://johith.notion.site/image/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2Fd1a24040-ea9f-41bb-ae1a-7658fa689b2a%2FUntitled.png?table=block&id=5ce038ed-693d-4197-bd0d-f453389e243e&spaceId=35060c7e-3917-4cd6-a745-937d3114d009&width=1250&userId=&cache=v2)
 
 ### Step Four: Setup Firewall Rules and NAT
 
@@ -335,15 +335,15 @@ Go to **Firewall → NAT → Outbound** and change **Mode** to **Manual Outb
 
 Edit the two rules that has the IP address of LAN (where we are setting up the OpenVPN client) and edit its interface to that of our VPN, in this case *PROTONVPN*
 
-![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/f89f35b4-2418-4b1a-857a-929f747c3781/Untitled.png)
+![Untitled](https://johith.notion.site/image/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2Ff89f35b4-2418-4b1a-857a-929f747c3781%2FUntitled.png?table=block&id=469bbee7-0cd9-404d-a207-5853e730292a&spaceId=35060c7e-3917-4cd6-a745-937d3114d009&width=1250&userId=&cache=v2)
 
 Change the interface as shown below:
 
-![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/356cd3e2-10bc-47c9-8586-b32d0c69d696/Untitled.png)
+![Untitled](https://johith.notion.site/image/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F356cd3e2-10bc-47c9-8586-b32d0c69d696%2FUntitled.png?table=block&id=33a7f429-5770-4162-a1ab-0fb92509c2f1&spaceId=35060c7e-3917-4cd6-a745-937d3114d009&width=1250&userId=&cache=v2)
 
 Now what we have finally left is to set the gateway for our LAN network so all of its incoming/outgoing traffic will be redirect through our VPN
 
-![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/503aade0-e391-4fbf-9bf1-789a157f67f5/Untitled.gif)
+![Untitled](https://file.notion.so/f/f/35060c7e-3917-4cd6-a745-937d3114d009/503aade0-e391-4fbf-9bf1-789a157f67f5/Untitled.gif?id=2352c896-687b-4712-b917-81c0161c4182&table=block&spaceId=35060c7e-3917-4cd6-a745-937d3114d009&expirationTimestamp=1720267200000&signature=NlaKmUzH_Hti5wFk0n7JuuGkpIC55eMSUozAVp-2mnc)
 
 ### Results!
 
@@ -351,13 +351,13 @@ Below are screen grabs from before and after setting up the VPN.
 
 As you can see, the screen shot below shows my actual IP address and location
 
-![ Before setting up the VPN on LAN. Yes, this is my location ��](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/5300eb93-5202-4c53-80ed-135a3ddcc619/Untitled.png)
+![ Before setting up the VPN on LAN. Yes, this is my location ��](https://johith.notion.site/image/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F5300eb93-5202-4c53-80ed-135a3ddcc619%2FUntitled.png?table=block&id=6312139e-de57-45d5-a69a-59f5c033b580&spaceId=35060c7e-3917-4cd6-a745-937d3114d009&width=1060&userId=&cache=v2)
 
  Before setting up the VPN on LAN. Yes, this is my location ��
 
 Below is my new public IP address and location after I setup the VPN
 
-![After setting up the VPN on LAN](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/465a2dae-6f95-44e5-be20-32b302dd6743/Untitled.png)
+![After setting up the VPN on LAN](https://johith.notion.site/image/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F465a2dae-6f95-44e5-be20-32b302dd6743%2FUntitled.png?table=block&id=b64f808b-621b-4d04-8881-02b9478159af&spaceId=35060c7e-3917-4cd6-a745-937d3114d009&width=1060&userId=&cache=v2)
 
 After setting up the VPN on LAN
 
@@ -370,17 +370,17 @@ After setting up the VPN on LAN
 
 ### Installing Snort on pfSense
 
-![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/6ff03f16-8301-4ef4-9f93-6d4ae035dc3d/Untitled.gif)
+![Untitled](https://file.notion.so/f/f/35060c7e-3917-4cd6-a745-937d3114d009/6ff03f16-8301-4ef4-9f93-6d4ae035dc3d/Untitled.gif?id=11dcca67-0f38-4a6d-b831-d9be077afb6e&table=block&spaceId=35060c7e-3917-4cd6-a745-937d3114d009&expirationTimestamp=1720267200000&signature=wyq1MvWo0uGTCN5jTeS1f5mYnLG-wnprleLdJY2zCKA)
 
 ### Configuring Snort Global Settings
 
-![Yes I did change the Oinkcode!](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/8f8e4574-6c5f-41d2-a51a-8ea0271f37c3/Untitled.gif)
+![Yes I did change the Oinkcode!](https://file.notion.so/f/f/35060c7e-3917-4cd6-a745-937d3114d009/8f8e4574-6c5f-41d2-a51a-8ea0271f37c3/Untitled.gif?id=1a6cbdc1-ac02-4c1e-a75b-0108b2de1c7a&table=block&spaceId=35060c7e-3917-4cd6-a745-937d3114d009&expirationTimestamp=1720267200000&signature=Ef4H7W1jbuptMdKiwNwO5NvgWAUBoIJN1o4JaBsYcvE)
 
 Yes I did change the Oinkcode!
 
-![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/d74c8d80-0a37-4471-8df0-7ce731a45b20/Untitled.png)
+![Untitled](https://johith.notion.site/image/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2Fd74c8d80-0a37-4471-8df0-7ce731a45b20%2FUntitled.png?table=block&id=f2be3096-00a1-468c-aeae-a15b9c2bfe9a&spaceId=35060c7e-3917-4cd6-a745-937d3114d009&width=1340&userId=&cache=v2)
 
-![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/2aaf1035-472f-4388-aab2-ae2d3f2642fa/Untitled.png)
+![Untitled](https://johith.notion.site/image/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F2aaf1035-472f-4388-aab2-ae2d3f2642fa%2FUntitled.png?table=block&id=e947ca39-3d6f-42b7-bc10-f8326953eeb3&spaceId=35060c7e-3917-4cd6-a745-937d3114d009&width=1340&userId=&cache=v2)
 
 ### Setting WAN interface
 
@@ -390,13 +390,13 @@ Here we enable Snort on the WAN interface - to inspect all incoming traffic ente
 - I’m only blocking the SRC IP address and not the DST address. It’s up to you!
 - The rest of the options are left to default. But whenever you can, I strongly recommend to fine tune your settings!
 
-![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/8a23f4e2-bd5d-45b9-a469-b0be6b83eaac/Untitled.gif)
+![Untitled](https://file.notion.so/f/f/35060c7e-3917-4cd6-a745-937d3114d009/8a23f4e2-bd5d-45b9-a469-b0be6b83eaac/Untitled.gif?id=c4196783-c3e7-4651-8ff1-d7ced4dec4b8&table=block&spaceId=35060c7e-3917-4cd6-a745-937d3114d009&expirationTimestamp=1720267200000&signature=63FxafILoS5xEapRqp-j2Wi8xXHfwECO2u8660vvdVc)
 
 ### Selecting WAN Rules
 
 Under *WAN Categories* we set the rules (pre-defined rules) that Snort can use to inspect the packets. We can manually select each rule we want to apply or let Snort decide which rules to use based on the category we apply. I chose *Security*  category as seen below
 
-![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/b73e655c-0cd8-4bf6-8cd5-3220c112da4f/Untitled.png)
+![Untitled](https://johith.notion.site/image/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2Fb73e655c-0cd8-4bf6-8cd5-3220c112da4f%2FUntitled.png?table=block&id=dfc1db45-c53e-4e66-b2dc-5910c8e27601&spaceId=35060c7e-3917-4cd6-a745-937d3114d009&width=2000&userId=&cache=v2)
 
 Apart from using pre-defined Snort rules we can also write custom rules, which we can set under the *WAN Rules* section/tab as seen below
 
@@ -407,13 +407,13 @@ Apart from using pre-defined Snort rules we can also write custom rules, which w
     - Check out my TryHackMe notes on creating custom Snort Rules: [Snort](https://www.notion.so/Snort-911050ce3c2f495fb0d61ef63870753d?pvs=21)
 - You can scroll down on the page to see the list of individual rules that will be applied. That is a long list BTW!
 
-![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/260d9f58-4082-46a2-b466-7491c5bb96b9/Untitled.png)
+![Untitled](https://johith.notion.site/image/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F260d9f58-4082-46a2-b466-7491c5bb96b9%2FUntitled.png?table=block&id=2005391c-e3bc-4632-8d30-440728626de9&spaceId=35060c7e-3917-4cd6-a745-937d3114d009&width=2000&userId=&cache=v2)
 
 ### Block based on IP reputation (Optional)
 
 We can let Snort decide public IP addresses that have low reputation and block activities from them. This can help reduce spam, adware and malicious websites
 
-![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/ecb87737-fec4-43ff-9a69-e921606d6b20/Untitled.png)
+![Untitled](https://johith.notion.site/image/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2Fecb87737-fec4-43ff-9a69-e921606d6b20%2FUntitled.png?table=block&id=245e9a34-b01b-4053-aea3-2dc269a305be&spaceId=35060c7e-3917-4cd6-a745-937d3114d009&width=2000&userId=&cache=v2)
 
 ### Adding Custom Snort Rules
 
@@ -424,21 +424,21 @@ This rule *alerts* admins of any incoming icmp packets. You can also choose to d
 
 See below on how to add custom snort rules
 
-![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/3ab7c48c-93bf-44bf-b09e-0c471bd3401d/Untitled.gif)
+![Untitled](https://file.notion.so/f/f/35060c7e-3917-4cd6-a745-937d3114d009/3ab7c48c-93bf-44bf-b09e-0c471bd3401d/Untitled.gif?id=f4ff1a89-c62c-4442-b4f5-28a1adeaf6d0&table=block&spaceId=35060c7e-3917-4cd6-a745-937d3114d009&expirationTimestamp=1720267200000&signature=tjEyA3Uj36Q5xfCAJzMnB-KK6aQS0NL1r3giYQ25Dhw)
 
 ### Let’s Start Snort !
 
 Starting Snort is really simple. Head over to *Services >> Snort* and click the button as shown below
 
-![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/27ec0e6e-8e24-48fc-aaf1-1db6598b66d5/Untitled.png)
+![Untitled](https://johith.notion.site/image/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F27ec0e6e-8e24-48fc-aaf1-1db6598b66d5%2FUntitled.png?table=block&id=f4eb41f9-9d60-482f-8564-02e86ee149f3&spaceId=35060c7e-3917-4cd6-a745-937d3114d009&width=2000&userId=&cache=v2)
 
-![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/bba53f5d-88fe-4b08-85d5-a1dc1ea19ebf/Untitled.png)
+![Untitled](https://johith.notion.site/image/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2Fbba53f5d-88fe-4b08-85d5-a1dc1ea19ebf%2FUntitled.png?table=block&id=636d0c96-5a88-48d0-85fd-8fc787ff8be1&spaceId=35060c7e-3917-4cd6-a745-937d3114d009&width=2000&userId=&cache=v2)
 
 ### Let’s test out Snort!
 
 Let’s see Snort in action
 
-![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/e38774a5-6d7b-4f0b-8d67-0d5bfac62bd2/Untitled.gif)
+![Untitled]https://file.notion.so/f/f/35060c7e-3917-4cd6-a745-937d3114d009/e38774a5-6d7b-4f0b-8d67-0d5bfac62bd2/Untitled.gif?id=ef770130-6832-4651-beb7-f750957b4a70&table=block&spaceId=35060c7e-3917-4cd6-a745-937d3114d009&expirationTimestamp=1720267200000&signature=XCiLZXHNu5fob43jcOSZUeB7QAv3j566-Ted_iOz2N0)
 
 As you can see from the above screen grab I pinged our network from Kali Linux which is situated outside our network. The Windows machine (as seen on the left) is part of our network and has the pfSense admin dashboard open to view the alerts in real time. 
 
@@ -446,7 +446,7 @@ Snort picked up the incoming icmp packets and alerted it in real time! Just like
 
 Let’s try again with an Nmap scan. As you can see below Snort effectively alerted the admin about the Nmap scans taking place! Pretty good stuff!
 
-![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/8a178c9d-29d9-4fb4-a5ea-9013b7876b74/Untitled.gif)
+![Untitled](https://file.notion.so/f/f/35060c7e-3917-4cd6-a745-937d3114d009/8a178c9d-29d9-4fb4-a5ea-9013b7876b74/Untitled.gif?id=2383a04b-9c67-467c-869c-922ae61d51ec&table=block&spaceId=35060c7e-3917-4cd6-a745-937d3114d009&expirationTimestamp=1720267200000&signature=S6yOGTghQYAaV3zo__QVEbe5zgMybFhLp1rQeRybJMk)
 
 # NOTES
 
