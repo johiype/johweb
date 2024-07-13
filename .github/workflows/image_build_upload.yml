@@ -1,11 +1,11 @@
-name: "Johweb Docker Image - ECR Upload Workflow. Only Triggered when app code changes"
+'name: "Johweb Docker Image - ECR Upload Workflow. Only Triggered when app code changes"
 on:
   workflow_call:
 
 env:
   WEBSRV_USR: ${{ vars.WEBSRV_USR }}
-  DOCKERHUB_USERNAME: ${{ vars.DOCKERHUB_USERNAME }}
-  DOCKERHUB_TOKEN: ${{ vars.DOCKERHUB_TOKEN }}
+  DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+  DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
 
   #ECR_ENDPOINT: ${{ vars.ECR_ENDPOINT }}
   #AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}

@@ -1,5 +1,6 @@
 name: "Johweb App Production Workflow"
 on:
+  workflow_dispatch:
   workflow_call:
   push:
     branches:
@@ -15,6 +16,8 @@ env:
   AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
   AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
   AWS_DEFAULT_REGION: ${{ vars.AWS_DEFAULT_REGION }}
+
+  DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
 
 jobs:
   boto3:
@@ -135,7 +138,7 @@ jobs:
             # docker-compose -f /home/${{ vars.WEBSRV_USR }}/compose.yml up -d johweb
 
            # Substitute placeholder with Docker Hub username from secrets
-            sed -i 's/username_here/${{ vars.DOCKERHUB_USERNAME }}/g' /home/${{ vars.WEBSRV_USR }}/compose.yml
+            sed -i 's/username_here/${{ secrets.DOCKERHUB_USERNAME }}/g' /home/${{ vars.WEBSRV_USR }}/compose.yml
 
             docker-compose --project-directory ./ up -d johweb
 
@@ -168,7 +171,7 @@ jobs:
             sudo chown ${{ vars.WEBSRV_USR }}:${{ vars.WEBSRV_USR }} /home/${{ vars.WEBSRV_USR }}/compose.yml && sudo chmod 0644 /home/${{ vars.WEBSRV_USR }}/compose.yml
 
             # Substitute placeholder with Docker Hub username from secrets
-            sed -i 's/username_here/${{ vars.DOCKERHUB_USERNAME }}/g' /home/${{ vars.WEBSRV_USR }}/compose.yml
+            sed -i 's/username_here/${{ secrets.DOCKERHUB_USERNAME }}/g' /home/${{ vars.WEBSRV_USR }}/compose.yml
 
             # Starting Web Server through Docker Compose
             docker-compose -f /home/${{ vars.WEBSRV_USR }}/compose.yml up -d caddy_reverse_proxy
