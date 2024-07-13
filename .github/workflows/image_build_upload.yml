@@ -1,4 +1,4 @@
-'name: "Johweb Docker Image - ECR Upload Workflow. Only Triggered when app code changes"
+name: "Johweb Docker Image - ECR Upload Workflow. Only Triggered when app code changes"
 on:
   workflow_call:
 
