@@ -26,7 +26,7 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v3
         with:
-          ref: infra-staging
+          ref: app-staging
           path: webapp
 
       - name: Build and Push Image to Docker Hub
