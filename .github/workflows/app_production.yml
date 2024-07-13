@@ -134,6 +134,9 @@ jobs:
             # Starting Web Server through Docker Compose
             # docker-compose -f /home/${{ vars.WEBSRV_USR }}/compose.yml up -d johweb
 
+           # Substitute placeholder with Docker Hub username from secrets
+            sed -i 's/username_here/${{ vars.DOCKERHUB_USERNAME }}/g' /home/${{ vars.WEBSRV_USR }}/compose.yml
+
             docker-compose --project-directory ./ up -d johweb
 
           '
@@ -163,6 +166,9 @@ jobs:
 
             # Set permissions on Compose file
             sudo chown ${{ vars.WEBSRV_USR }}:${{ vars.WEBSRV_USR }} /home/${{ vars.WEBSRV_USR }}/compose.yml && sudo chmod 0644 /home/${{ vars.WEBSRV_USR }}/compose.yml
+
+            # Substitute placeholder with Docker Hub username from secrets
+            sed -i 's/username_here/${{ vars.DOCKERHUB_USERNAME }}/g' /home/${{ vars.WEBSRV_USR }}/compose.yml
 
             # Starting Web Server through Docker Compose
             docker-compose -f /home/${{ vars.WEBSRV_USR }}/compose.yml up -d caddy_reverse_proxy

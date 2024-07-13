@@ -158,5 +158,9 @@ jobs:
             # Starting Web Server through Docker Compose
             # docker-compose -f /home/${{ vars.WEBSRV_USR }}/staging/compose.yml -f /home/${{ vars.WEBSRV_USR }}/staging/compose.staging.yml up -d johweb
 
+
+             # Substitute placeholder with Docker Hub username from secrets
+            sed -i 's/username_here/${{ vars.DOCKERHUB_USERNAME }}/g' /home/${{ vars.WEBSRV_USR }}/staging/compose.yml
+
             docker-compose --project-directory ./staging/ up -d johweb
              '
