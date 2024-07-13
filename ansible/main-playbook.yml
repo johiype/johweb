@@ -25,7 +25,7 @@
           - yum-utils
           - device-mapper-persistent-data
           - lvm2
-          - golang
+          # - golang
         state: present
 
     - name: Install Docker
@@ -83,27 +83,27 @@
         owner: "{{ lookup('env', 'WEBSRV_USR') }}"
         group: "{{ lookup('env', 'WEBSRV_USR') }}"
 
-    - name: Set environment variables and install ECR credential helper
-      shell: |
-        export GOPATH=/home/{{ lookup('env', 'WEBSRV_USR') }}/go
-        export PATH=$PATH:$GOPATH/bin
-        export DEAFULT_ECR_HELPER_CFG="/home/{{ lookup('env', 'WEBSRV_USR') }}/.docker/config.json"
-        go install github.com/awslabs/amazon-ecr-credential-helper/ecr-login/cli/docker-credential-ecr-login@latest
-        mv go/bin/docker-credential-ecr-login /usr/bin/
+    #- name: Set environment variables and install ECR credential helper
+    #  shell: |
+    #    export GOPATH=/home/{{ lookup('env', 'WEBSRV_USR') }}/go
+    #    export PATH=$PATH:$GOPATH/bin
+    #    export DEAFULT_ECR_HELPER_CFG="/home/{{ lookup('env', 'WEBSRV_USR') }}/.docker/config.json"
+    #    go install github.com/awslabs/amazon-ecr-credential-helper/ecr-login/cli/docker-credential-ecr-login@latest
+    #    mv go/bin/docker-credential-ecr-login /usr/bin/
 
-    - name: Change ownership of Go directory to the user
-      file:
-        path: "/home/{{ lookup('env', 'WEBSRV_USR') }}/go"
-        state: directory
-        owner: "{{ lookup('env', 'WEBSRV_USR') }}"
-        group: "{{ lookup('env', 'WEBSRV_USR') }}"
-        recurse: yes
+   # - name: Change ownership of Go directory to the user
+   #   file:
+   #     path: "/home/{{ lookup('env', 'WEBSRV_USR') }}/go"
+   #     state: directory
+   #     owner: "{{ lookup('env', 'WEBSRV_USR') }}"
+   #     group: "{{ lookup('env', 'WEBSRV_USR') }}"
+   #     recurse: yes
 
-    - name: Add ECR credential helper configuration to Docker config.json
-      template:
-        src: docker_config.json.j2
-        dest: "/home/{{ lookup('env', 'WEBSRV_USR') }}/.docker/config.json"
-        mode: '0644'
+   # - name: Add ECR credential helper configuration to Docker config.json
+   #   template:
+   #     src: docker_config.json.j2
+   #     dest: "/home/{{ lookup('env', 'WEBSRV_USR') }}/.docker/config.json"
+   #     mode: '0644'
 
     - name: Restarting Docker Service
       service:
