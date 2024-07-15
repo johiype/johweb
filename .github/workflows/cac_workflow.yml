@@ -73,8 +73,7 @@ jobs:
           playbook: main-playbook.yml
           options: |
             --inventory dynamic-inventory.py
-            --limit "web_servers"
-            --limit "proxy_servers"
+            --limit "'web_servers,proxy_servers'"
 
       - name: Run Ansible Playbook on Bastion Host
         uses: dawidd6/action-ansible-playbook@v2
