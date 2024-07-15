@@ -66,23 +66,13 @@ jobs:
           echo "proxy=${proxy_server_ip}" >> "$GITHUB_OUTPUT"
           echo "bastion=${bastion_host_args}" >> "$GITHUB_OUTPUT"
 
-      - name: Run Ansible Playbook on Web and Proxy Servers
+      - name: Run Ansible Playbook on Web, Proxy and Bastion Servers
         uses: dawidd6/action-ansible-playbook@v2
         with:
           directory: ./ansible
           playbook: main-playbook.yml
           options: |
             --inventory dynamic-inventory.py
-            --limit "web_servers,proxy_servers"
-
-      - name: Run Ansible Playbook on Bastion Host
-        uses: dawidd6/action-ansible-playbook@v2
-        with:
-          directory: ./ansible
-          playbook: main-playbook.yml
-          options: |
-            --inventory dynamic-inventory.py
-            --limit "bastion_server"
 
   Trigger_Ansible_Prod_Workflow:
     name: "Triggering Anisble Production Workflow"
