@@ -56,6 +56,7 @@ for instance in proxy_server_instances:
 	if(instance.private_ip_address == None):
 		continue
 	inventory["proxy_servers"]["hosts"].append(instance.private_ip_address)
+	inventory["proxy_servers"]["hosts"].append(instance.public_ip_address)
 
 for instance in bastion_server_instance:
         if(instance.public_ip_address == None):
