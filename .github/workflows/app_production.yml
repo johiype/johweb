@@ -64,7 +64,7 @@ jobs:
           ansible/dynamic-inventory.py > inventory.json
           web_server_ip=$(jq -r .web_servers.hosts[0] inventory.json)
           proxy_priv_ip=$(jq -r .proxy_servers.hosts[0] inventory.json)
-          proxy_pub_ip=$(jq -r .proxy_servers.hosts[1] inventory.json)
+          proxy_pub_ip=$(jq -r .proxy_pub_ip.hosts[0] inventory.json)
           bastion_host_args=$(jq -r .web_servers.vars.ansible_ssh_common_args inventory.json)
 
           echo "web=${web_server_ip}" >> "$GITHUB_OUTPUT"
