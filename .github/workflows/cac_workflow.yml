@@ -1,6 +1,7 @@
 
 name: "Johweb Ansible CaC Workflow"
 on:
+  workflow_dispatch:
   workflow_call:
   push:
     branches:
@@ -65,13 +66,23 @@ jobs:
           echo "proxy=${proxy_server_ip}" >> "$GITHUB_OUTPUT"
           echo "bastion=${bastion_host_args}" >> "$GITHUB_OUTPUT"
 
-      - name: Run Ansible Playbook
+      - name: Run Ansible Playbook for Bastion Host
         uses: dawidd6/action-ansible-playbook@v2
         with:
           directory: ./ansible
           playbook: main-playbook.yml
           options: |
             --inventory dynamic-inventory.py
+            --limit "bastion_server"
+
+      - name: Run Ansible Playbook for Web and Proxy Servers
+        uses: dawidd6/action-ansible-playbook@v2
+        with:
+          directory: ./ansible
+          playbook: main-playbook.yml
+          options: |
+            --inventory dynamic-inventory.py
+            --limit "web_servers, proxy_servers"
 
   Trigger_Ansible_Prod_Workflow:
     name: "Triggering Anisble Production Workflow"
