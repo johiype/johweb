@@ -34,6 +34,9 @@ inventory = {
                 "ansible_ssh_common_args": f"-o StrictHostKeyChecking=no -J {websrv_usr}@{bastion_host}"
             }
 	},
+	"proxy_pub_ip": {
+        "hosts": []
+	},
 	 "bastion_server": {
         "hosts": [],
         "vars": {
@@ -56,7 +59,11 @@ for instance in proxy_server_instances:
 	if(instance.private_ip_address == None):
 		continue
 	inventory["proxy_servers"]["hosts"].append(instance.private_ip_address)
-	inventory["proxy_servers"]["hosts"].append(instance.public_ip_address)
+
+for instance in proxy_server_instances:
+	if(instance.public_ip_address == None):
+                continue
+	inventory["proxy_pub_ip"]["hosts"].append(instance.public_ip_address)
 
 for instance in bastion_server_instance:
         if(instance.public_ip_address == None):
