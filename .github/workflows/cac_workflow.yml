@@ -66,7 +66,11 @@ jobs:
           echo "proxy=${proxy_server_ip}" >> "$GITHUB_OUTPUT"
           echo "bastion=${bastion_host_args}" >> "$GITHUB_OUTPUT"
 
+<<<<<<< HEAD
       - name: Run Ansible Playbook for Bastion Host
+=======
+      - name: Run Ansible Playbook on Web, Proxy and Bastion Servers
+>>>>>>> 2bc822b2e726c0f82efa2d5fedf065a6ede46e89
         uses: dawidd6/action-ansible-playbook@v2
         with:
           directory: ./ansible

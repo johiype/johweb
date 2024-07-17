@@ -1,5 +1,5 @@
 - name: Configure Web and Proxy Servers
-  hosts: web_servers
+  hosts: web_servers, proxy_servers
   become: yes
   gather_facts: no
   tasks:
