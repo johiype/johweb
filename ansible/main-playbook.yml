@@ -1,35 +1,28 @@
-- name: Install Docker and Docker Compose on Amazon Linux 2023
-  hosts: all
+- name: Configure Web and Proxy Servers
+  hosts: web_servers, proxy_servers
   become: yes
   gather_facts: no
   tasks:
 
-    - name: Wait 300 seconds, but only start checking after 60 seconds
+    - name: Waiting for instances to be online
       ansible.builtin.wait_for_connection:
-        delay: 60
         timeout: 300
 
     - name: Update all packages
-      yum:
+      ansible.builtin.dnf:
         name: "*"
         state: latest
 
-    #- name: Install ECR Credential Helper
-    #  ansible.builtin.dnf:
-     #   name: amazon-ecr-credential-helper
-     #   state: latest
-
     - name: Install required packages
-      yum:
+      ansible.builtin.dnf:
         name:
           - yum-utils
           - device-mapper-persistent-data
           - lvm2
-          # - golang
         state: present
 
     - name: Install Docker
-      yum:
+      ansible.builtin.dnf:
         name: docker
         state: present
 
@@ -105,7 +98,33 @@
    #     dest: "/home/{{ lookup('env', 'WEBSRV_USR') }}/.docker/config.json"
    #     mode: '0644'
 
-    - name: Restarting Docker Service
-      service:
-        name: docker
-        state: restarted
+    #- name: Restarting Docker Service
+    #  service:
+    #    name: docker
+    #    enabled: yes
+
+    - name: "Rebooting all servers. Please wait....."
+      ansible.builtin.reboot:
+
+    - name: Final Docker Verifation.
+      command: docker --version
+      register: docker_version
+
+- name: Configure Bastion Server
+  hosts: bastion_server
+  become: yes
+  gather_facts: no
+  tasks:
+
+    - name: Waiting for instances to be online
+      ansible.builtin.wait_for_connection:
+        timeout: 300
+
+    - name: Update all packages in bastion host
+      ansible.builtin.dnf:
+        name: "*"
+        state: latest
+
+    - name: "Rebooting bastion server. Please wait....."
+      ansible.builtin.reboot:
+        test_command: "whoami"

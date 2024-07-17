@@ -25,7 +25,8 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       web_server_ip: ${{ steps.pyscript.outputs.web }}
-      proxy_server_ip: ${{ steps.pyscript.outputs.proxy }}
+      proxy_priv_ip: ${{ steps.pyscript.outputs.proxy_priv }}
+      proxy_pub_ip: ${{ steps.pyscript.outputs.proxy_pub }}
       bastion_host_args: ${{ steps.pyscript.outputs.bastion }}
 
     steps:
@@ -62,11 +63,13 @@ jobs:
         run: |
           ansible/dynamic-inventory.py > inventory.json
           web_server_ip=$(jq -r .web_servers.hosts[0] inventory.json)
-          proxy_server_ip=$(jq -r .proxy_servers.hosts[0] inventory.json)
+          proxy_priv_ip=$(jq -r .proxy_servers.hosts[0] inventory.json)
+          proxy_pub_ip=$(jq -r .proxy_pub_ip.hosts[0] inventory.json)
           bastion_host_args=$(jq -r .web_servers.vars.ansible_ssh_common_args inventory.json)
 
           echo "web=${web_server_ip}" >> "$GITHUB_OUTPUT"
-          echo "proxy=${proxy_server_ip}" >> "$GITHUB_OUTPUT"
+          echo "proxy_priv=${proxy_priv_ip}" >> "$GITHUB_OUTPUT"
+          echo "proxy_pub=${proxy_pub_ip}" >> "$GITHUB_OUTPUT"
           echo "bastion=${bastion_host_args}" >> "$GITHUB_OUTPUT"
 
   Production:
@@ -105,8 +108,8 @@ jobs:
           scp ${{needs.boto3.outputs.bastion_host_args}} webapp/compose.yml ${{vars.WEBSRV_USR}}@${{needs.boto3.outputs.web_server_ip}}:/home/${{vars.WEBSRV_USR}}/
 
           # Copy Compose file to Proxy Server
-          scp ${{needs.boto3.outputs.bastion_host_args}} webapp/compose.yml ${{vars.WEBSRV_USR}}@${{needs.boto3.outputs.proxy_server_ip}}:/home/${{vars.WEBSRV_USR}}/
-          # scp ${{needs.boto3.outputs.bastion_host_args}} webapp/Caddyfile ${{vars.WEBSRV_USR}}@${{needs.boto3.outputs.proxy_server_ip}}:/home/${{vars.WEBSRV_USR}}/
+          scp ${{needs.boto3.outputs.bastion_host_args}} webapp/compose.yml ${{vars.WEBSRV_USR}}@${{needs.boto3.outputs.proxy_priv_ip}}:/home/${{vars.WEBSRV_USR}}/
+          # scp ${{needs.boto3.outputs.bastion_host_args}} webapp/Caddyfile ${{vars.WEBSRV_USR}}@${{needs.boto3.outputs.proxy_priv_ip}}:/home/${{vars.WEBSRV_USR}}/
 
       - name: "Setting up Hugo"
         uses: peaceiris/actions-hugo@v3
@@ -146,7 +149,7 @@ jobs:
 
       - name: "Preparing Production Environment in Proxy Server"
         run: |
-          ssh ${{needs.boto3.outputs.bastion_host_args}} ${{ vars.WEBSRV_USR }}@${{needs.boto3.outputs.proxy_server_ip}} "
+          ssh ${{needs.boto3.outputs.bastion_host_args}} ${{ vars.WEBSRV_USR }}@${{needs.boto3.outputs.proxy_priv_ip}} "
 
             # Configuring Caddyfile
             # sed -i 's/{$johweb_websrv_privateip}/${{needs.boto3.outputs.web_server_ip}}/g' /home/${{ vars.WEBSRV_USR }}/Caddyfile
@@ -178,3 +181,37 @@ jobs:
 
           "
 
+      - name: "Updating CloudFlare DNS Records"
+        run: |
+          proxy_pub_ip=${{needs.boto3.outputs.proxy_pub_ip}}
+          
+          curl --request GET \
+            --url https://api.cloudflare.com/client/v4/zones/915ec642e6987fba48eef42621489828/dns_records \
+            --header 'Content-Type: application/json' \
+            --header "X-Auth-Email: ${{ secrets.CLDFLR_AUTH_EMAIL }}" \
+            --header "X-Auth-Key: ${{ secrets.CLDFLR_AUTH_KEY }}"    > cloudflare.json
+
+          jq -c '.result[]' cloudflare.json | while read record; do
+                  record_id=$(echo $record | jq -r '.id')
+                  zone_name=$(echo $record | jq -r '.zone_name')
+                  type=$(echo $record | jq -r '.type')
+                  name=$(echo $record | jq -r '.name')
+
+                  if [ $zone_name = "johith.com" ] && [ $type = "A" ]; then
+                          curl --request PATCH \
+                            --url https://api.cloudflare.com/client/v4/zones/915ec642e6987fba48eef42621489828/dns_records/$record_id \
+                            --header "Content-Type: application/json" \
+                            --header "X-Auth-Email: ${{ secrets.CLDFLR_AUTH_EMAIL }}" \
+                            --header "X-Auth-Key: ${{ secrets.CLDFLR_AUTH_KEY }}" \
+                            --data "{
+                            \"content\": \"$proxy_pub_ip\",
+                            \"name\": \"$name\",
+                            \"proxied\": false,
+                            \"type\": \"A\",
+                            \"comment\": \"Updated via API\",
+                            \"id\": \"$record_id\",
+                            \"ttl\": 1
+                          }"
+                  fi
+                  continue
+          done

@@ -1,6 +1,7 @@
 
 name: "Johweb Ansible CaC Workflow"
 on:
+  workflow_dispatch:
   workflow_call:
   push:
     branches:
@@ -65,7 +66,7 @@ jobs:
           echo "proxy=${proxy_server_ip}" >> "$GITHUB_OUTPUT"
           echo "bastion=${bastion_host_args}" >> "$GITHUB_OUTPUT"
 
-      - name: Run Ansible Playbook
+      - name: Run Ansible Playbook for Web, Proxy and Bastion Servers
         uses: dawidd6/action-ansible-playbook@v2
         with:
           directory: ./ansible
