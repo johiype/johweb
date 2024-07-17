@@ -2,6 +2,7 @@ services:
   johweb:
     #image: 067771804697.dkr.ecr.us-east-2.amazonaws.com/johweb_docker_image_repo
     image: username_here/johwebserver:latest
+    restart: unless-stopped
     ports:
       - "8080:80"
     container_name: johweb
