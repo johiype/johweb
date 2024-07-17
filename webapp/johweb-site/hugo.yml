@@ -10,10 +10,13 @@ params:
     enabled: true
     title: ' '
     subtitle1: "Hi \U0001F44B, I'm **Johith Iype**. Thank you for visiting!"
-    subtitle2: "I work as an IT Admin. I like tinkering with amazing pieces of software and glueing them together to make some cool projects.
-                I've built this website to showcase my nerdy side. You can see some of my personal homeserver projects **[here](projects)**"
-    subtitle3: " I'm always open for a chat and exciting opportunities, so feel free to contact me!"
-    subtitle4: "To know more about me, use the links below."
+    subtitle2: "I work as an **IT Admin** and enjoy experimenting with different software, combining them to create personal projects.
+                Check out my [home server setup here.](projects)"
+    subtitle3: " I created this website using **CI/CD pipeline** automation to dive into modern Ops practices.
+                You can read all about my process and how I accomplished it [here](posts/website-development/)"
+    subtitle4: " I'm always **open for a chat** and exciting opportunities, so feel free to [contact me](contact).
+                To know more [about me](aboutme), use the links below."
+    subtitle5: "To know more about me, use the links below."
     imageUrl: "img/JohithDP.jpg"
     imageWidth: 195
     imageHeight: 190
