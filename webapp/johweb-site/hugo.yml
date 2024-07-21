@@ -29,8 +29,8 @@ params:
         url: resume
       - name: Contact
         url: contact
-      - name: Projects
-        url: projects
+      - name: HomeServer Projects
+        url: homeserver
       - name: Building this website
         url: /posts/website-development
 
@@ -58,3 +58,5 @@ menu:
       name: Contact Me
       url: /contact/
       weight: 20
+      
+enableEmoji: true 

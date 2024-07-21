@@ -81,8 +81,10 @@ As you can see, a comment is generated with *terraform plan* output. Upon confir
 
 - All SSH connections enters the VPC through the bastion host
 - Uses SSH Tunneling
+
+### NAT Instance
 - All outgoing internet traffic originating from private subnet flows through the bastion host which is also a NAT instance.
-    - The NAT Instance is configure using [fck-nat](https://fck-nat.dev/stable/), which is a free, open-source and cheaper alternative to AWS’s managed NAT gateway.
+    - The NAT instance is configured using [fck-nat](https://fck-nat.dev/stable/), which is a free, open-source and cheaper alternative to AWS’s managed NAT gateway.
 
 ### Proxy Server using Caddy Server
 
