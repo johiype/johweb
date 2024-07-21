@@ -58,3 +58,5 @@ menu:
       name: Contact Me
       url: /contact/
       weight: 20
+      
+enableEmoji: true 
